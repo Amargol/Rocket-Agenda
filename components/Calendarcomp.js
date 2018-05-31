@@ -2,13 +2,45 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
+import { inject, observer } from "mobx-react";
+import { toJS, autorun } from "mobx";
+import CreateTaskModal from "./CreateTaskModal";
 
-// create a component
+@inject("store")
+@observer
 class Calendarcomp extends Component {
   componentDidMount() {
-    this.props.addTask(1, 2);
+    autorun(() => {
+      // console.log('dates', this.props.store.dates)
+      // console.log('content', this.props.store.content)
+      // console.log('makedDates', this.props.store.markedDates)
+    })
   }
-  render() {
+  constructor(props) {
+    super(props);
+    this.closeModal = this.closeModal.bind(this);
+    this.submitNewTask = this.submitNewTask.bind(this);
+    this.getMarkedDates = this.getMarkedDates.bind(this)
+    this.state = {
+      modalVisible: false,
+      date: "2001-01-01"
+    };
+  }
+  closeModal() {
+    this.setState({ modalVisible: false });
+  }
+  submitNewTask(task, date) {
+    this.props.store.addTask(task, date);
+  }
+  getMarkedDates() {
+    let markedDates = {}
+    let content = toJS(this.props.store.content)
+    
+    for (var key in content) {
+      markedDates[key] = {marked: true}
+    }
+
+
     var date = new Date();
     var today =
       date.getUTCFullYear() +
@@ -17,13 +49,19 @@ class Calendarcomp extends Component {
       "-" +
       ("0" + date.getDate()).slice(-2);
 
-    var calendarObj = {};
-    calendarObj[today] = { selected: true };
+    if (markedDates[today] === undefined) {
+      markedDates[today] = { selected: true };
+    } else {
+      markedDates[today] = { selected: true, marked: true };
+    }
 
+    return markedDates
+  }
+  render() {
     return (
       <View style={styles.container}>
         <Calendar
-          markedDates={calendarObj}
+          markedDates={this.getMarkedDates()}
           theme={{
             backgroundColor: "#333248",
             calendarBackground: "#333248",
@@ -33,11 +71,17 @@ class Calendarcomp extends Component {
             textDisabledColor: "#b6c1cd"
           }}
           onDayLongPress={day => {
-            console.log("selected day", day);
+            this.setState({ modalVisible: true, date: day.dateString });
           }}
           onDayPress={day => {
-            console.log("selected day", day);
+            // this.props.store.addDate(day.dateString);
           }}
+        />
+        <CreateTaskModal
+          modalVisible={this.state.modalVisible}
+          closeModal={this.closeModal}
+          submitNewTask={this.submitNewTask}
+          date={this.state.date}
         />
       </View>
     );

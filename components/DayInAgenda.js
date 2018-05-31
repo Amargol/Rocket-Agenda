@@ -1,23 +1,47 @@
 //import liraries
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
+import { observer, inject } from "mobx-react";
+import { toJS } from "mobx";
 
-import Task1 from "./Task.1";
+import Task from "./Task";
 
-// create a component
+@inject("store")
+@observer
 class DayInAgenda extends Component {
+  getFormattedDate(date) {
+    var dateArr = date.split("-");
+    var months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    var dayNum = parseInt(dateArr[2]);
+    var month = months[parseInt(dateArr[1] - 1, 10)];
+    var year = dateArr[0];
+    return month + " " + dayNum + ", " + year;
+  }
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.textStyle}>December 30, 2018</Text>
+        <Text style={styles.textStyle}>
+          {this.getFormattedDate(this.props.date)}
+        </Text>
         <View style={styles.taskContainer}>
-          <Task1 />
-          <Task1 />
-          <Task1 />
-          <Task1 />
-          <Task1 />
-          <Task1 />
-          <Task1 />
+          <FlatList
+            data={toJS(this.props.store.content[this.props.date])}
+            renderItem={({ item }) => <Task title={item} />}
+            keyExtractor={item => { return item }}
+          />
         </View>
       </View>
     );
@@ -27,7 +51,7 @@ class DayInAgenda extends Component {
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10
+    marginVertical: 7
   },
   taskContainer: {
     marginLeft: 1
@@ -37,7 +61,7 @@ const styles = StyleSheet.create({
     fontFamily: "System",
     fontWeight: "700",
     paddingBottom: 2,
-    marginHorizontal: 15,
+    marginHorizontal: 15
   },
   taskStyle: {
     fontFamily: "System",

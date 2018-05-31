@@ -17,7 +17,6 @@ class Task extends Component {
     this.state = {
       svWidth: 0
     };
-    this.value = 0;
     this.xOffset = new Animated.Value(0);
     this.styling = {
       opacity: this.xOffset.interpolate({
@@ -25,6 +24,7 @@ class Task extends Component {
         outputRange: [1, 0]
       })
     };
+    this.value = 0;
     this.xOffset.addListener(({ value }) => {
       this.value = value;
     });
@@ -48,7 +48,7 @@ class Task extends Component {
       >
         <TouchableOpacity style={styles.touchableStyle} activeOpacity={.4}>
           <Text style={[styles.taskStyle, { width: this.state.svWidth - 30 }]}>
-            Take out the trash
+            {this.props.title}
           </Text>
         </TouchableOpacity>
         <View style={{ width: Dimensions.get("window").width * 2 }} />
