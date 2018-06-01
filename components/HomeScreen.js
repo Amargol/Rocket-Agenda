@@ -161,13 +161,13 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "System",
     color: "white",
-    fontWeight: "900",
+    fontWeight: "700",
     fontSize: 35
   },
   subText: {
     fontFamily: "System",
     color: "white",
-    fontWeight: "900",
+    fontWeight: "700",
     fontSize: 15,
     paddingHorizontal: 3
   },

@@ -1,6 +1,32 @@
 import { observable, computed, action } from "mobx";
+import { AsyncStorage } from "react-native";
 
 export default class Store {
+  constructor() {
+    this.initFromStore();
+  }
+
+  @action
+  initFromStore() {
+    AsyncStorage.getItem("dates").then(dates => {
+      if (dates !== null) {
+        this.dates = JSON.parse(dates);
+      }
+    });
+
+    AsyncStorage.getItem("content").then(content => {
+      if (content !== null) {
+        this.content = JSON.parse(content);
+      }
+    });
+  }
+
+  @action
+  saveToStore() {
+    AsyncStorage.setItem("dates", JSON.stringify(this.dates));
+    AsyncStorage.setItem("content", JSON.stringify(this.content));
+  }
+
   @observable dates = [];
   @observable content = {};
 
@@ -21,8 +47,6 @@ export default class Store {
       date1 = new Date(date1Year, date1Month, date1Day);
       date2 = new Date(date2Year, date2Month, date2Day);
 
-      console.log(date2Day, '>', date1Day, date2>date1)
-      
       return date2 > date1;
     }
     insertIndex = this.dates.length;
@@ -33,12 +57,20 @@ export default class Store {
       }
     }
     this.dates.splice(insertIndex, 0, date);
-    this.content[date] = observable([task]);
+    this.content[date] = observable([
+      observable({
+        task: task,
+        id: Math.floor(Math.random() * 1000000000).toString()
+      })
+    ]);
   }
 
   @action
   addTaskToExistingDate(task, date) {
-    this.content[date].push(task);
+    this.content[date].push({
+      task: task,
+      id: Math.floor(Math.random() * 1000000000).toString()
+    });
   }
 
   @action
@@ -48,8 +80,24 @@ export default class Store {
     } else {
       this.addTaskToExistingDate(task, date);
     }
+    this.saveToStore();
   }
 
-  @computed
-  get markedDates() {}
+  @action
+  removeTask(task, date) {
+    if (this.content[date].length === 1) {
+      this.dates.splice(this.dates.indexOf(date), 1);
+      this.content[date] = undefined;
+    } else {
+      this.content[date].splice(
+        this.content[date]
+          .map(function(e) {
+            return e.id;
+          })
+          .indexOf(task.id),
+        1
+      );
+    }
+    this.saveToStore();
+  }
 }

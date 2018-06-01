@@ -30,6 +30,9 @@ class DayInAgenda extends Component {
     var year = dateArr[0];
     return month + " " + dayNum + ", " + year;
   }
+  removeTask(task) {
+    this.props.store.removeTask(task, this.props.date)
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -39,8 +42,10 @@ class DayInAgenda extends Component {
         <View style={styles.taskContainer}>
           <FlatList
             data={toJS(this.props.store.content[this.props.date])}
-            renderItem={({ item }) => <Task title={item} />}
-            keyExtractor={item => { return item }}
+            renderItem={({ item }) => <Task info={item} removeTask={this.removeTask.bind(this)}/>}
+            keyExtractor={item => {
+              return item.id;
+            }}
           />
         </View>
       </View>

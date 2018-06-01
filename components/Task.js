@@ -24,9 +24,12 @@ class Task extends Component {
         outputRange: [1, 0]
       })
     };
-    this.value = 0;
+    this.removed = false;
     this.xOffset.addListener(({ value }) => {
-      this.value = value;
+      if (value > 100 && !this.removed) {
+        this.props.removeTask(this.props.info);
+        this.removed = true;
+      }
     });
   }
   render() {
@@ -46,9 +49,9 @@ class Task extends Component {
           this.setState({ svWidth: e.nativeEvent.layout.width });
         }}
       >
-        <TouchableOpacity style={styles.touchableStyle} activeOpacity={.4}>
+        <TouchableOpacity style={styles.touchableStyle} activeOpacity={0.4}>
           <Text style={[styles.taskStyle, { width: this.state.svWidth - 30 }]}>
-            {this.props.title}
+            {this.props.info.task}
           </Text>
         </TouchableOpacity>
         <View style={{ width: Dimensions.get("window").width * 2 }} />
@@ -60,7 +63,7 @@ class Task extends Component {
 // define your styles
 const styles = StyleSheet.create({
   ScrollView: {
-    marginRight: 5,
+    marginRight: 5
   },
   touchableStyle: {
     marginHorizontal: 15,

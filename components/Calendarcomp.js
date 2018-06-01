@@ -13,14 +13,13 @@ class Calendarcomp extends Component {
     autorun(() => {
       // console.log('dates', this.props.store.dates)
       // console.log('content', this.props.store.content)
-      // console.log('makedDates', this.props.store.markedDates)
-    })
+    });
   }
   constructor(props) {
     super(props);
     this.closeModal = this.closeModal.bind(this);
     this.submitNewTask = this.submitNewTask.bind(this);
-    this.getMarkedDates = this.getMarkedDates.bind(this)
+    this.getMarkedDates = this.getMarkedDates.bind(this);
     this.state = {
       modalVisible: false,
       date: "2001-01-01"
@@ -33,13 +32,7 @@ class Calendarcomp extends Component {
     this.props.store.addTask(task, date);
   }
   getMarkedDates() {
-    let markedDates = {}
-    let content = toJS(this.props.store.content)
-    
-    for (var key in content) {
-      markedDates[key] = {marked: true}
-    }
-
+    var markedDates = {}
 
     var date = new Date();
     var today =
@@ -49,13 +42,9 @@ class Calendarcomp extends Component {
       "-" +
       ("0" + date.getDate()).slice(-2);
 
-    if (markedDates[today] === undefined) {
-      markedDates[today] = { selected: true };
-    } else {
-      markedDates[today] = { selected: true, marked: true };
-    }
+    markedDates[today] = { selected: true };
 
-    return markedDates
+    return markedDates;
   }
   render() {
     return (
