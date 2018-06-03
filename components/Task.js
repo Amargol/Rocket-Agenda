@@ -49,7 +49,7 @@ class Task extends Component {
           this.setState({ svWidth: e.nativeEvent.layout.width });
         }}
       >
-        <TouchableOpacity style={styles.touchableStyle} activeOpacity={0.4}>
+        <TouchableOpacity style={[styles.touchableStyle, {borderLeftColor: this.props.color}]} activeOpacity={0.4}>
           <Text style={[styles.taskStyle, { width: this.state.svWidth - 30 }]}>
             {this.props.info.task}
           </Text>
@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     paddingLeft: 5,
     paddingBottom: 2,
-    borderLeftColor: "#EA4335",
     borderLeftWidth: 5
   },
   taskStyle: {

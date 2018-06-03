@@ -20,7 +20,8 @@ export default class HomeScreen extends React.Component {
       yOfCalendar: 1,
       pan: new Animated.Value(),
       dates: [],
-      content: {}
+      content: {},
+      index: ''
     };
     this.remindersAreUp = true;
   }
@@ -94,6 +95,9 @@ export default class HomeScreen extends React.Component {
       yOfText: textY
     });
   }
+  scrollToDate(date) {
+    this.setState({index: date})
+  }
   componentWillMount() {
     this._panResponder = PanResponder.create({
       onMoveShouldSetResponderCapture: () => true,
@@ -130,7 +134,7 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.text}>{dayOfWeek}</Text>
             <Text style={styles.subText}>{today}</Text>
           </View>
-          <Calendarcomp />
+          <Calendarcomp scrollToDate={this.scrollToDate.bind(this)}/>
         </View>
         <Animated.View
           style={[styles.movableReminderContainer, { top: this.state.pan }]}
@@ -141,7 +145,7 @@ export default class HomeScreen extends React.Component {
           >
             <View style={styles.grabBar} />
           </View>
-          <Agenda />
+          <Agenda index={this.state.index}/>
         </Animated.View>
       </SafeAreaView>
     );

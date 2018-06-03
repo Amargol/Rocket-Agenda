@@ -37,11 +37,11 @@ export default class Store {
       date2 = date2.split("-");
 
       let date1Year = parseInt(date1[0]);
-      let date1Month = parseInt(date1[1]);
+      let date1Month = parseInt(date1[1]) - 1;
       let date1Day = parseInt(date1[2]);
 
       let date2Year = parseInt(date2[0]);
-      let date2Month = parseInt(date2[1]);
+      let date2Month = parseInt(date2[1]) - 1;
       let date2Day = parseInt(date2[2]);
 
       date1 = new Date(date1Year, date1Month, date1Day);
@@ -99,5 +99,24 @@ export default class Store {
       );
     }
     this.saveToStore();
+  }
+
+  @computed
+  get markedDates() {
+    var markedDates = this.dates.reduce((obj, item) => {
+      obj[item] = { marked: true };
+      return obj
+    }, {});
+    var date = new Date();
+    var today =
+      date.getUTCFullYear() +
+      "-" +
+      ("0" + (date.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + date.getDate()).slice(-2);
+
+    markedDates[today] = { selected: true };
+
+    return markedDates;
   }
 }
