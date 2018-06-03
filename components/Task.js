@@ -49,7 +49,20 @@ class Task extends Component {
           this.setState({ svWidth: e.nativeEvent.layout.width });
         }}
       >
-        <TouchableOpacity style={[styles.touchableStyle, {borderLeftColor: this.props.color}]} activeOpacity={0.4}>
+        <TouchableOpacity
+          style={[styles.touchableStyle, { borderLeftColor: this.props.color }]}
+          activeOpacity={0.4}
+          onPress={() => {
+            this.props.openModal(
+              this.props.date,
+              this.props.formattedDate,
+              this.props.info.task,
+              this.props.color,
+              this.props.info.notes,
+              this.props.info.id
+            );
+          }}
+        >
           <Text style={[styles.taskStyle, { width: this.state.svWidth - 30 }]}>
             {this.props.info.task}
           </Text>

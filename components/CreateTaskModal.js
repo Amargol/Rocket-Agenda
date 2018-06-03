@@ -20,8 +20,8 @@ class CreateTaskModal extends Component {
     };
   }
   getFormattedDate(date) {
-    var dateArr = date.split("-");
-    var months = [
+    let dateArr = date.split("-");
+    let months = [
       "January",
       "February",
       "March",
@@ -35,9 +35,9 @@ class CreateTaskModal extends Component {
       "November",
       "December"
     ];
-    var dayNum = parseInt(dateArr[2]);
-    var month = months[parseInt(dateArr[1] - 1, 10)];
-    var year = dateArr[0];
+    let dayNum = parseInt(dateArr[2]);
+    let month = months[parseInt(dateArr[1] - 1, 10)];
+    let year = dateArr[0];
     return month + " " + dayNum + ", " + year;
   }
   submit() {

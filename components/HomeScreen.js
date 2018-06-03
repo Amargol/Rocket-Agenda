@@ -25,6 +25,7 @@ export default class HomeScreen extends React.Component {
     };
     this.remindersAreUp = true;
   }
+  // Animates the reminder container up and covers the calendar
   moveReminderContainerUp() {
     Animated.spring(this.state.pan, {
       toValue: this.state.yOfText,
@@ -32,6 +33,7 @@ export default class HomeScreen extends React.Component {
     }).start();
     this.remindersAreUp = true;
   }
+  // Animates the reminder container down and covers the calendar
   moveReminderContainerDown() {
     Animated.spring(this.state.pan, {
       toValue: this.state.yOfCalendar,
@@ -40,19 +42,20 @@ export default class HomeScreen extends React.Component {
     }).start();
     this.remindersAreUp = false;
   }
+  // Decides
   isMovementThresholdCrossed() {
-    var distanceToText = Math.abs(this.state.yOfText - this.state.pan._value);
-    var distanceToCalendar = Math.abs(
+    let distanceToText = Math.abs(this.state.yOfText - this.state.pan._value);
+    let distanceToCalendar = Math.abs(
       this.state.yOfCalendar - this.state.pan._value
     );
-    var scaler = 1;
+    let scaler = 1;
     scaler = this.remindersAreUp ? 1.75 : 1 / 1.75;
 
     return distanceToText * scaler >= distanceToCalendar / scaler;
   }
   formattedDate() {
-    var date = new Date();
-    var daysOfTheWeek = [
+    let date = new Date();
+    let daysOfTheWeek = [
       "Sunday",
       "Monday",
       "Tuesday",
@@ -61,7 +64,7 @@ export default class HomeScreen extends React.Component {
       "Friday",
       "Saturday"
     ];
-    var months = [
+    let months = [
       "January",
       "February",
       "March",
@@ -75,22 +78,22 @@ export default class HomeScreen extends React.Component {
       "November",
       "December"
     ];
-    var dayOfWeek = daysOfTheWeek[date.getDay()];
-    var today = months[date.getMonth()] + " " + date.getDate();
+    let dayOfWeek = daysOfTheWeek[date.getDay()];
+    let today = months[date.getMonth()] + " " + date.getDate();
     return {
       dayOfWeek: dayOfWeek,
       today: today
     };
   }
   onTopContainerLayout(e) {
-    var calendarY = e.nativeEvent.layout.height + e.nativeEvent.layout.y;
+    let calendarY = e.nativeEvent.layout.height + e.nativeEvent.layout.y;
     this.setState({
       yOfCalendar: calendarY
     });
     this.state.pan.setValue(calendarY);
   }
   onTextContainerLayout(e) {
-    var textY = e.nativeEvent.layout.height + e.nativeEvent.layout.y;
+    let textY = e.nativeEvent.layout.height + e.nativeEvent.layout.y;
     this.setState({
       yOfText: textY
     });

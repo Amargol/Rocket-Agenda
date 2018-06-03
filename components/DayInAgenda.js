@@ -11,12 +11,13 @@ import Task from "./Task";
 class DayInAgenda extends Component {
   constructor(props) {
     super(props);
+    this.formattedDate = this.getFormattedDate(this.props.date);
     this.specialDateText = this.isSpecialDate(this.props.date);
     this.color = this.getColor(this.props.date);
   }
   getFormattedDate(date) {
-    var dateArr = date.split("-");
-    var months = [
+    let dateArr = date.split("-");
+    let months = [
       "January",
       "February",
       "March",
@@ -30,17 +31,17 @@ class DayInAgenda extends Component {
       "November",
       "December"
     ];
-    var dayNum = parseInt(dateArr[2]);
-    var month = months[parseInt(dateArr[1] - 1, 10)];
-    var year = dateArr[0];
+    let dayNum = parseInt(dateArr[2]);
+    let month = months[parseInt(dateArr[1] - 1, 10)];
+    let year = dateArr[0];
     return month + " " + dayNum + ", " + year;
   }
   removeTask(task) {
     this.props.store.removeTask(task, this.props.date);
   }
   isSpecialDate(date) {
-    var todayDate = new Date();
-    var today =
+    let todayDate = new Date();
+    let today =
       todayDate.getUTCFullYear() +
       "-" +
       ("0" + (todayDate.getMonth() + 1)).slice(-2) +
@@ -49,7 +50,7 @@ class DayInAgenda extends Component {
 
     todayDate.setDate(todayDate.getDate() + 1);
 
-    var tomorrow =
+    let tomorrow =
       todayDate.getUTCFullYear() +
       "-" +
       ("0" + (todayDate.getMonth() + 1)).slice(-2) +
@@ -99,7 +100,7 @@ class DayInAgenda extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.textStyle}>
-          {this.specialDateText || this.getFormattedDate(this.props.date)}
+          {this.specialDateText || this.formattedDate}
         </Text>
         <View style={styles.taskContainer}>
           <FlatList
@@ -107,6 +108,9 @@ class DayInAgenda extends Component {
             renderItem={({ item }) => (
               <Task
                 info={item}
+                openModal={this.props.openModal}
+                date={this.props.date}
+                formattedDate={this.formattedDate}
                 removeTask={this.removeTask.bind(this)}
                 color={this.color}
               />

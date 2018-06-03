@@ -50,7 +50,7 @@ export default class Store {
       return date2 > date1;
     }
     insertIndex = this.dates.length;
-    for (var i = 0; i < this.dates.length; i++) {
+    for (let i = 0; i < this.dates.length; i++) {
       if (isDateBigger(date, this.dates[i])) {
         insertIndex = i;
         break;
@@ -60,7 +60,8 @@ export default class Store {
     this.content[date] = observable([
       observable({
         task: task,
-        id: Math.floor(Math.random() * 1000000000).toString()
+        id: Math.floor(Math.random() * 1000000000).toString(),
+        notes: ""
       })
     ]);
   }
@@ -69,7 +70,8 @@ export default class Store {
   addTaskToExistingDate(task, date) {
     this.content[date].push({
       task: task,
-      id: Math.floor(Math.random() * 1000000000).toString()
+      id: Math.floor(Math.random() * 1000000000).toString(),
+      notes: ""
     });
   }
 
@@ -103,12 +105,12 @@ export default class Store {
 
   @computed
   get markedDates() {
-    var markedDates = this.dates.reduce((obj, item) => {
+    let markedDates = this.dates.reduce((obj, item) => {
       obj[item] = { marked: true };
       return obj
     }, {});
-    var date = new Date();
-    var today =
+    let date = new Date();
+    let today =
       date.getUTCFullYear() +
       "-" +
       ("0" + (date.getMonth() + 1)).slice(-2) +
