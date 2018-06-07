@@ -2,9 +2,9 @@
 import React, { Component } from "react";
 import { Provider } from "mobx-react";
 
-import HomeScreen from "./components/HomeScreen";
+import HomeScreen from "./screens/HomeScreen";
 
-import Store from "./Stores/Store";
+import Store from "./stores/Store";
 
 const store = new Store();
 

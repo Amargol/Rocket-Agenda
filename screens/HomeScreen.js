@@ -9,8 +9,8 @@ import {
   PanResponder,
   Animated
 } from "react-native";
-import Calendarcomp from "./Calendarcomp";
-import Agenda from "./Agenda";
+import Calendarcomp from "../components/Calendarcomp";
+import Agenda from "../components/Agenda";
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -21,28 +21,32 @@ export default class HomeScreen extends React.Component {
       pan: new Animated.Value(),
       dates: [],
       content: {},
-      index: ''
+      index: ""
     };
     this.remindersAreUp = true;
   }
   // Animates the reminder container up and covers the calendar
   moveReminderContainerUp() {
-    Animated.spring(this.state.pan, {
-      toValue: this.state.yOfText,
+    let { pan, yOfText } = this.state;
+
+    Animated.spring(pan, {
+      toValue: yOfText,
       speed: 14
     }).start();
     this.remindersAreUp = true;
   }
   // Animates the reminder container down and covers the calendar
   moveReminderContainerDown() {
-    Animated.spring(this.state.pan, {
-      toValue: this.state.yOfCalendar,
+    let { pan, yOfCalendar } = this.state;
+
+    Animated.spring(pan, {
+      toValue: yOfCalendar,
       speed: 15,
       bounciness: 12
     }).start();
     this.remindersAreUp = false;
   }
-  // Decides
+  // When PanResponder is released, decide whether the reminder container should move up or down
   isMovementThresholdCrossed() {
     let distanceToText = Math.abs(this.state.yOfText - this.state.pan._value);
     let distanceToCalendar = Math.abs(
@@ -53,6 +57,7 @@ export default class HomeScreen extends React.Component {
 
     return distanceToText * scaler >= distanceToCalendar / scaler;
   }
+  // Returns Formatted Date for today as an object
   formattedDate() {
     let date = new Date();
     let daysOfTheWeek = [
@@ -85,6 +90,7 @@ export default class HomeScreen extends React.Component {
       today: today
     };
   }
+  // Sets yOfCalendar and the initial position of the reminder container
   onTopContainerLayout(e) {
     let calendarY = e.nativeEvent.layout.height + e.nativeEvent.layout.y;
     this.setState({
@@ -92,15 +98,19 @@ export default class HomeScreen extends React.Component {
     });
     this.state.pan.setValue(calendarY);
   }
+  // Sets yOfText
   onTextContainerLayout(e) {
     let textY = e.nativeEvent.layout.height + e.nativeEvent.layout.y;
     this.setState({
       yOfText: textY
     });
   }
+  // Tells the agenda component to scroll to a date
+  // date is a string of form "YYYY-MM-DD"
   scrollToDate(date) {
-    this.setState({index: date})
+    this.setState({ index: date });
   }
+  // Create panResponder
   componentWillMount() {
     this._panResponder = PanResponder.create({
       onMoveShouldSetResponderCapture: () => true,
@@ -137,7 +147,7 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.text}>{dayOfWeek}</Text>
             <Text style={styles.subText}>{today}</Text>
           </View>
-          <Calendarcomp scrollToDate={this.scrollToDate.bind(this)}/>
+          <Calendarcomp scrollToDate={this.scrollToDate.bind(this)} />
         </View>
         <Animated.View
           style={[styles.movableReminderContainer, { top: this.state.pan }]}
@@ -148,7 +158,7 @@ export default class HomeScreen extends React.Component {
           >
             <View style={styles.grabBar} />
           </View>
-          <Agenda index={this.state.index}/>
+          <Agenda index={this.state.index} />
         </Animated.View>
       </SafeAreaView>
     );

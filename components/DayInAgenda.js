@@ -57,15 +57,28 @@ class DayInAgenda extends Component {
       "-" +
       ("0" + todayDate.getDate()).slice(-2);
 
+    todayDate.setDate(todayDate.getDate() - 2);
+
+    let yesterday =
+      todayDate.getUTCFullYear() +
+      "-" +
+      ("0" + (todayDate.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + todayDate.getDate()).slice(-2);
+
     if (date === today) {
       return "Today";
     } else if (date === tomorrow) {
       return "Tomorrow";
+    } else if (date === yesterday) {
+      return "Yesterday";
     } else {
       return null;
     }
   }
+  // Decide what color the task should be
   getColor(date) {
+    // converts from "YYYY-MM-DD" to JS Date object
     function convertToDate(stringDate) {
       let dateArr = stringDate.split("-");
 
@@ -76,12 +89,17 @@ class DayInAgenda extends Component {
       let date = new Date(year, month, day);
       return date;
     }
+
     let today = new Date();
     let targetDate = convertToDate(date);
 
     let timeDiff = targetDate.getTime() - today.getTime();
     let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
+    // Calculate the number of days between two days
+    // Makes the color red if the task is overdue
+    // Makes the color green if the task is due today
+    // Makes the color blue if the task is due in the future and adjusts the opacity of the color depending on how far in the future the task is due
     if (diffDays < 0) {
       return "#EA4335";
     } else if (diffDays === 0) {
@@ -89,8 +107,8 @@ class DayInAgenda extends Component {
     } else if (diffDays > 0 && diffDays < 5) {
       let opacity = 0.9 * ((10 - diffDays) / 10) + 0.1;
       return "rgba(66, 133, 244, " + opacity + ")";
-    } else if (diffDays >= 5 && diffDays < 15) {
-      let opacity = 0.35 * ((15 - diffDays) / 15) + 0.2;
+    } else if (diffDays >= 5 && diffDays < 10) {
+      let opacity = 0.35 * ((10 - diffDays) / 10) + 0.2;
       return "rgba(66, 133, 244, " + opacity + ")";
     } else {
       return "rgba(66, 133, 244, .1)";

@@ -24,7 +24,25 @@ class Task extends Component {
         outputRange: [1, 0]
       })
     };
+    this.textStyle = {
+      transform: [
+        {
+          translateX: this.xOffset.interpolate({
+            inputRange: [0, 45],
+            outputRange: [0, -Dimensions.get("window").width/2 + 100]
+          })
+        },
+        {
+          scale: this.xOffset.interpolate({
+            inputRange: [0, 50],
+            outputRange: [1, 0]
+          })
+        }
+      ]
+    };
     this.removed = false;
+
+    // Once the task is scrolled past a certain value, remove the task
     this.xOffset.addListener(({ value }) => {
       if (value > 100 && !this.removed) {
         this.props.removeTask(this.props.info);
@@ -63,9 +81,9 @@ class Task extends Component {
             );
           }}
         >
-          <Text style={[styles.taskStyle, { width: this.state.svWidth - 30 }]}>
+          <Animated.Text style={[styles.taskStyle, this.textStyle, { width: this.state.svWidth - 30 }]}>
             {this.props.info.task}
-          </Text>
+          </Animated.Text>
         </TouchableOpacity>
         <View style={{ width: Dimensions.get("window").width * 2 }} />
       </Animated.ScrollView>

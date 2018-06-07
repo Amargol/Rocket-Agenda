@@ -53,16 +53,24 @@ class Agenda extends Component {
     this.setState({ modalVisible: false });
   }
   saveText(value) {
-    let index = this.props.store.content[this.state.modalContent.date]
+    let { modalContent } = this.state;
+    let { store } = this.props;
+
+    let index = store.content[modalContent.date]
       .map(e => e.id)
-      .indexOf(this.state.modalContent.id);
+      .indexOf(modalContent.id);
 
-    this.props.store.content[this.state.modalContent.date][index].notes = value;
+    store.content[modalContent.date][index].notes = value;
 
-    this.props.store.saveToStore();
+    store.saveToStore();
   }
   componentDidUpdate() {
-    let index = toJS(this.props.store.dates).indexOf(this.props.index);
+    let { store } = this.props;
+
+    // Scroll to an index when user presses a date on the calendar
+    // props.index is the desired date to scroll to
+    // Find indexOf the desired date to scroll to and use scrollToIndex
+    let index = toJS(store.dates).indexOf(this.props.index);
     if (index !== -1 && this.props.index !== this.prevIndex) {
       this.flatListRef.scrollToIndex({ animated: true, index: index });
       this.prevIndex = this.props.index;
@@ -82,7 +90,7 @@ class Agenda extends Component {
           ref={ref => {
             this.flatListRef = ref;
           }}
-          ListFooterComponent={<View style={{height: 100}}/>}
+          ListFooterComponent={<View style={{ height: 100 }} />}
         />
         <Modal
           animationType="slide"
@@ -92,7 +100,7 @@ class Agenda extends Component {
         >
           <View style={styles.modalContainer}>
             <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
-              <Text style={styles.closeButton}>Close</Text>
+              <Text style={styles.closeButton}>Close and Save</Text>
             </TouchableOpacity>
             <ScrollView>
               <View style={styles.modalContentContainer}>
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 17
   },
   closeButton: {
-    backgroundColor: "#eee",
+    backgroundColor: "#F5F5F5",
     textAlign: "center",
     padding: 17
   },
