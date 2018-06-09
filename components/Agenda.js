@@ -100,7 +100,7 @@ class Agenda extends Component {
           visible={this.state.modalVisible}
           onRequestClose={this.closeModal}
         >
-          <StatusBar barStyle="dark-content" />
+        {Platform.OS === "ios" ? <StatusBar barStyle="dark-content" /> : null}
           <SafeAreaView
             style={{
               flex: 1,
