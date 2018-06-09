@@ -10,7 +10,8 @@ import {
   TextInput,
   ScrollView,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import { observer, inject } from "mobx-react";
 import { toJS } from "mobx";
@@ -100,7 +101,7 @@ class Agenda extends Component {
           visible={this.state.modalVisible}
           onRequestClose={this.closeModal}
         >
-        {Platform.OS === "ios" ? <StatusBar barStyle="dark-content" /> : null}
+          {Platform.OS === "ios" ? <StatusBar barStyle="dark-content" /> : null}
           <SafeAreaView
             style={{
               flex: 1,
