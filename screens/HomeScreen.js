@@ -41,8 +41,7 @@ export default class HomeScreen extends React.Component {
 
     Animated.spring(pan, {
       toValue: yOfCalendar,
-      speed: 15,
-      bounciness: 12
+      speed: 14
     }).start();
     this.remindersAreUp = false;
   }
@@ -135,37 +134,47 @@ export default class HomeScreen extends React.Component {
   render() {
     let { dayOfWeek, today } = this.formattedDate();
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#333248" }}>
-        <View
-          style={styles.topContainer}
-          onLayout={e => this.onTopContainerLayout(e)}
-        >
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.viewContentContainer}>
           <View
-            style={styles.textContainer}
-            onLayout={e => this.onTextContainerLayout(e)}
+            style={styles.topContainer}
+            onLayout={e => this.onTopContainerLayout(e)}
           >
-            <Text style={styles.text}>{dayOfWeek}</Text>
-            <Text style={styles.subText}>{today}</Text>
+            <View
+              style={styles.textContainer}
+              onLayout={e => this.onTextContainerLayout(e)}
+            >
+              <Text style={styles.text}>{dayOfWeek}</Text>
+              <Text style={styles.subText}>{today}</Text>
+            </View>
+            <Calendarcomp scrollToDate={this.scrollToDate.bind(this)} />
           </View>
-          <Calendarcomp scrollToDate={this.scrollToDate.bind(this)} />
+          <Animated.View
+            style={[styles.movableReminderContainer, { top: this.state.pan }]}
+          >
+            <View
+              style={styles.grabBarContainer}
+              {...this._panResponder.panHandlers}
+            >
+              <View style={styles.grabBar} />
+            </View>
+            <Agenda index={this.state.index} />
+          </Animated.View>
         </View>
-        <Animated.View
-          style={[styles.movableReminderContainer, { top: this.state.pan }]}
-        >
-          <View
-            style={styles.grabBarContainer}
-            {...this._panResponder.panHandlers}
-          >
-            <View style={styles.grabBar} />
-          </View>
-          <Agenda index={this.state.index} />
-        </Animated.View>
       </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#333248"
+  },
+  viewContentContainer: {
+    position: "relative",
+    flex: 1
+  },
   topContainer: {
     backgroundColor: "#333248",
     paddingBottom: 10

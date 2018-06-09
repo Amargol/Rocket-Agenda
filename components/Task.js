@@ -56,6 +56,7 @@ class Task extends Component {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         pagingEnabled={true}
+        bounces={false}
         ref={c => (this.myRef = c)}
         style={[styles.ScrollView, this.styling]}
         scrollEventThrottle={16}

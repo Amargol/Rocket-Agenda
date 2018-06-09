@@ -8,7 +8,8 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  ScrollView
+  ScrollView,
+  SafeAreaView
 } from "react-native";
 import { observer, inject } from "mobx-react";
 import { toJS } from "mobx";
@@ -98,34 +99,50 @@ class Agenda extends Component {
           visible={this.state.modalVisible}
           onRequestClose={this.closeModal}
         >
-          <View style={styles.modalContainer}>
-            <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
-              <Text style={styles.closeButton}>Close and Save</Text>
-            </TouchableOpacity>
-            <ScrollView>
-              <View style={styles.modalContentContainer}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.textStyle}>
-                    {this.state.modalContent.formattedDate}
-                  </Text>
-                  <Text style={styles.taskStyle}>
-                    {this.state.modalContent.task}
-                  </Text>
+          <SafeAreaView
+            style={{
+              flex: 1,
+              backgroundColor: "#F5F5F5",
+              position: "relative"
+            }}
+          >
+            <View style={styles.modalContainer}>
+              <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
+                <Text style={styles.closeButton}>Close and Save</Text>
+              </TouchableOpacity>
+              <ScrollView>
+                <View style={styles.modalContentContainer}>
+                  <View
+                    style={[
+                      styles.textContainer,
+                      {
+                        borderLeftWidth: 5,
+                        borderLeftColor: this.state.modalContent.color
+                      }
+                    ]}
+                  >
+                    <Text style={styles.textStyle}>
+                      {this.state.modalContent.formattedDate}
+                    </Text>
+                    <Text style={styles.taskStyle}>
+                      {this.state.modalContent.task}
+                    </Text>
+                  </View>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      multiline={true}
+                      style={styles.textInput}
+                      placeholder={"Notes"}
+                      underlineColorAndroid="#eee"
+                      placeholderTextColor="black"
+                      onChangeText={this.saveText}
+                      defaultValue={this.state.modalContent.notes}
+                    />
+                  </View>
                 </View>
-                <View style={styles.textInputContainer}>
-                  <TextInput
-                    multiline={true}
-                    style={styles.textInput}
-                    placeholder={"Notes"}
-                    underlineColorAndroid="#eee"
-                    placeholderTextColor="black"
-                    onChangeText={this.saveText}
-                    defaultValue={this.state.modalContent.notes}
-                  />
-                </View>
-              </View>
-            </ScrollView>
-          </View>
+              </ScrollView>
+            </View>
+          </SafeAreaView>
         </Modal>
       </View>
     );
@@ -149,18 +166,22 @@ const styles = StyleSheet.create({
     margin: 15
   },
   textContainer: {
-    marginBottom: 15
+    marginBottom: 15,
+    paddingHorizontal: 7,
+    marginVertical: 2
   },
   textStyle: {
     fontSize: 24,
     fontFamily: "System",
     fontWeight: "700",
-    paddingVertical: 2
+    paddingBottom: 2
   },
   taskStyle: {
     fontFamily: "System",
     fontSize: 18,
-    paddingVertical: 2
+    paddingTop: 2,
+    paddingBottom: 5,
+    paddingHorizontal: 1
   },
   textInputContainer: {
     backgroundColor: "#eee",
