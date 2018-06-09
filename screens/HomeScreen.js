@@ -8,7 +8,8 @@ import {
   ScrollView,
   PanResponder,
   Animated,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import Calendarcomp from "../components/Calendarcomp";
 import Agenda from "../components/Agenda";
@@ -136,7 +137,7 @@ export default class HomeScreen extends React.Component {
     let { dayOfWeek, today } = this.formattedDate();
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle="light-content" />
+        {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
         <View style={styles.viewContentContainer}>
           <View
             style={styles.topContainer}
