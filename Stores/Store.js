@@ -33,38 +33,6 @@ export default class Store {
       }
       if (content !== null) {
         this.content = JSON.parse(content);
-      } else {
-        // init tutorial
-        var today = new Date();
-        var yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
-        var dayAfterTomottow = new Date(today);
-        dayAfterTomottow.setDate(today.getDate() + 2);
-        var twentyDaysFromNow = new Date(today);
-        twentyDaysFromNow.setDate(today.getDate() + 20);
-
-        this.addTask("Drag the grey area above me to move the agenda up and down", stringDate(yesterday));
-        this.addTask("Press and hold a date on the calendar to add a task on that date", stringDate(yesterday));
-        this.addTask("Press a date on the calendar to scroll the agenda to that date", stringDate(yesterday));
-        this.addTask("This is an overdue task. It was due yesterday.", stringDate(yesterday));
-        this.addTask("Overdue tasks are colored red", stringDate(yesterday));
-
-        this.addTask("This task is due today", stringDate(today));
-        this.addTask("Tasks due today are colored green", stringDate(today));
-        this.addTask("Swipe tasks to the left when they are complete", stringDate(today));
-        this.content[stringDate(today)].push({
-          task: "Click here to add additional notes to this task",
-          id: Math.floor(Math.random() * 1000000000).toString(),
-          notes: "This is a note. Click here to edit it"
-        });
-        this.saveToStore();
-
-        this.addTask("This is a task due in the near future", stringDate(dayAfterTomottow));
-        this.addTask("Tasks due in the near future are colored blue", stringDate(dayAfterTomottow));
-
-        this.addTask("I am a task due in the distant future", stringDate(twentyDaysFromNow));
-        this.addTask("Tasks due in the distant future are colored light blue", stringDate(twentyDaysFromNow));
-
       }
     });
   }

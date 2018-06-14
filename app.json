@@ -8,13 +8,13 @@
     "privacy": "public",
     "sdkVersion": "27.0.0",
     "platforms": ["ios", "android"],
-    "version": "2.0.0",
+    "version": "4.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#333248"
+      "backgroundColor": "#ffffff"
     },
     "androidStatusBar": {
       "backgroundColor": "#333248"
@@ -31,7 +31,7 @@
     },
     "android": {
       "package": "com.amargol.rocketagenda",
-      "versionCode": 2
+      "versionCode": 4
     }
   }
 }

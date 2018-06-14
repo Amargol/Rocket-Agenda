@@ -28,13 +28,13 @@ class Task extends Component {
       transform: [
         {
           translateX: this.xOffset.interpolate({
-            inputRange: [0, 45],
-            outputRange: [0, -Dimensions.get("window").width/2 + 100]
+            inputRange: [0, 90],
+            outputRange: [0, -Dimensions.get("window").width/2 + 90]
           })
         },
         {
           scale: this.xOffset.interpolate({
-            inputRange: [0, 50],
+            inputRange: [0, 100],
             outputRange: [1, 0]
           })
         }

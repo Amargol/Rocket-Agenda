@@ -87,7 +87,7 @@ class CreateTaskModal extends Component {
 // define your styles
 const styles = StyleSheet.create({
   clearBackground: {
-    backgroundColor: "rgba(0, 0, 0, .9)",
+    backgroundColor: "rgb(0, 0, 0)",
     flex: 1
   },
   form: {

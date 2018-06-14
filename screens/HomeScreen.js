@@ -161,7 +161,12 @@ export default class HomeScreen extends React.Component {
             >
               <View style={styles.grabBar} />
             </View>
-            <Agenda index={this.state.index} />
+            <Agenda
+              index={this.state.index}
+              resetIndex={() => {
+                this.setState({ index: null });
+              }}
+            />
           </Animated.View>
         </View>
       </SafeAreaView>

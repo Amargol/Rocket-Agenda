@@ -103,6 +103,8 @@ class DayInAgenda extends Component {
     if (diffDays < 0) {
       return "#EA4335";
     } else if (diffDays === 0) {
+      return "rgba(251, 184, 5, 1)";
+    } else if (diffDays === 1) {
       return "rgba(52, 168, 83, .7)";
     } else if (diffDays > 0 && diffDays < 5) {
       let opacity = 0.9 * ((10 - diffDays) / 10) + 0.1;

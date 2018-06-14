@@ -26,7 +26,6 @@ class Agenda extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
     this.saveText = this.saveText.bind(this);
-    this.prevIndex = "";
     this.state = {
       modalVisible: false,
       modalContent: {
@@ -67,6 +66,50 @@ class Agenda extends Component {
 
     store.saveToStore();
   }
+  renderFooter(length) {
+    if (length === 0) {
+      return (
+        <View style={{ padding: 20 }}>
+          <Text style={styles.tutorialTextHeader}>
+            You don't have any tasks yet :)
+          </Text>
+          <View style={{ marginVertical: 10 }}>
+            <Text style={styles.tutorialText}>
+              Drag the grey bar to move the agenda
+            </Text>
+            <Text style={styles.tutorialText}>
+              Long press a date on the calendar to add a task
+            </Text>
+            <Text style={styles.tutorialText}>
+              Touch a date on the calendar to scroll to it
+            </Text>
+            <Text style={styles.tutorialText}>
+              Touch a task to attach a note to it
+            </Text>
+          </View>
+          <View style={{paddingBottom: 70}}>
+            <Text style={styles.tutorialText}>
+              <Text style={styles.redText}>Red</Text> tasks are overdue
+            </Text>
+            <Text style={styles.tutorialText}>
+              <Text style={styles.yellowText}>Yellow</Text> tasks are due today
+            </Text>
+            <Text style={styles.tutorialText}>
+              <Text style={styles.greenText}>Green</Text> tasks are due tomorrow
+            </Text>
+            <Text style={styles.tutorialText}>
+              <Text style={styles.blueText}>Blue</Text> tasks are due in the future
+            </Text>
+            <Text style={styles.tutorialText}>
+              <Text style={styles.lightBlueText}>Light blue</Text> tasks are due in the distant future
+            </Text>
+          </View>
+        </View>
+      );
+    } else {
+      return <View style={{ height: 90 }} />;
+    }
+  }
   componentDidUpdate() {
     let { store } = this.props;
 
@@ -74,9 +117,9 @@ class Agenda extends Component {
     // props.index is the desired date to scroll to
     // Find indexOf the desired date to scroll to and use scrollToIndex
     let index = toJS(store.dates).indexOf(this.props.index);
-    if (index !== -1 && this.props.index !== this.prevIndex) {
+    if (index !== -1 && index !== null) {
       this.flatListRef.scrollToIndex({ animated: true, index: index });
-      this.prevIndex = this.props.index;
+      this.props.resetIndex();
     }
   }
   render() {
@@ -93,7 +136,7 @@ class Agenda extends Component {
           ref={ref => {
             this.flatListRef = ref;
           }}
-          ListFooterComponent={<View style={{ height: 100 }} />}
+          ListFooterComponent={this.renderFooter(this.props.store.dates.length)}
         />
         <Modal
           animationType="slide"
@@ -136,7 +179,7 @@ class Agenda extends Component {
                       multiline={true}
                       style={styles.textInput}
                       placeholder={"Notes"}
-                      underlineColorAndroid="#eee"
+                      underlineColorAndroid="#F5F5F5"
                       placeholderTextColor="black"
                       onChangeText={this.saveText}
                       defaultValue={this.state.modalContent.notes}
@@ -187,14 +230,44 @@ const styles = StyleSheet.create({
     paddingHorizontal: 1
   },
   textInputContainer: {
-    backgroundColor: "#eee",
-    borderRadius: 10,
-    padding: 10,
+    backgroundColor: "#F5F5F5",
+    borderRadius: 5,
+    // padding: 10,
     marginBottom: 20
   },
   textInput: {
+    padding: 10
     // paddingBottom: 5
-  }
+  },
+  tutorialTextHeader: {
+    fontSize: 23,
+    fontWeight: "bold"
+  },
+  tutorialText: {
+    fontSize: 13,
+    marginVertical: 1,
+    color: "#606060"
+  },
+  redText: {
+    color: "#EA4335",
+    fontWeight: "bold"
+  },
+  yellowText: {
+    color: "rgba(251, 184, 5, 1)",
+    fontWeight: "bold"
+  },
+  greenText: {
+    color: "rgba(52, 168, 83, .7)",
+    fontWeight: "bold"
+  },
+  blueText: {
+    color: "rgb(66, 133, 244)",
+    fontWeight: "bold"
+  },
+  lightBlueText: {
+    color: "rgba(66, 133, 244, .3)",
+    fontWeight: "bold"
+  },
 });
 
 //make this component available to the app
