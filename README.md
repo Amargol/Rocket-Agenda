@@ -4,7 +4,6 @@
 
 ## Features
 
-* Beautiful design
 * Color coded tasks by date
 * Live calendar
 * Notes
