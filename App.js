@@ -4,7 +4,7 @@ import { Provider } from "mobx-react";
 
 import HomeScreen from "./screens/HomeScreen";
 
-import Store from "./stores/Store";
+import Store from "./Stores/Store";
 
 const store = new Store();
 

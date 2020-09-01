@@ -11,6 +11,7 @@ import {
   StatusBar,
   Platform
 } from "react-native";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Calendarcomp from "../components/Calendarcomp";
 import Agenda from "../components/Agenda";
 
@@ -20,12 +21,32 @@ export default class HomeScreen extends React.Component {
     this.state = {
       yOfText: 0,
       yOfCalendar: 1,
-      pan: new Animated.Value(),
+      pan: new Animated.Value(0),
       dates: [],
       content: {},
       index: ""
     };
     this.remindersAreUp = true;
+
+    this._panResponder = PanResponder.create({
+      onMoveShouldSetResponderCapture: () => true,
+      onMoveShouldSetPanResponderCapture: () => true,
+
+      onPanResponderGrant: (e, gestureState) => {
+        this.state.pan.setOffset(this.state.pan._value);
+        this.state.pan.setValue(0);
+      },
+      onPanResponderMove: Animated.event([
+        null,
+        { dx: null, dy: this.state.pan }
+      ]),
+      onPanResponderRelease: (e, { vx, vy }) => {
+        this.state.pan.flattenOffset();
+        return this.isMovementThresholdCrossed()
+          ? this.moveReminderContainerDown()
+          : this.moveReminderContainerUp();
+      }
+    });
   }
   // Animates the reminder container up and covers the calendar
   moveReminderContainerUp() {
@@ -33,7 +54,8 @@ export default class HomeScreen extends React.Component {
 
     Animated.spring(pan, {
       toValue: yOfText,
-      speed: 14
+      speed: 14,
+      useNativeDriver: false
     }).start();
     this.remindersAreUp = true;
   }
@@ -43,7 +65,8 @@ export default class HomeScreen extends React.Component {
 
     Animated.spring(pan, {
       toValue: yOfCalendar,
-      speed: 14
+      speed: 14,
+      useNativeDriver: false
     }).start();
     this.remindersAreUp = false;
   }
@@ -112,31 +135,12 @@ export default class HomeScreen extends React.Component {
     this.setState({ index: date });
   }
   // Create panResponder
-  componentWillMount() {
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
-
-      onPanResponderGrant: (e, gestureState) => {
-        this.state.pan.setOffset(this.state.pan._value);
-        this.state.pan.setValue(0);
-      },
-      onPanResponderMove: Animated.event([
-        null,
-        { dx: null, dy: this.state.pan }
-      ]),
-      onPanResponderRelease: (e, { vx, vy }) => {
-        this.state.pan.flattenOffset();
-        return this.isMovementThresholdCrossed()
-          ? this.moveReminderContainerDown()
-          : this.moveReminderContainerUp();
-      }
-    });
+  componentDidMount() {
   }
   render() {
     let { dayOfWeek, today } = this.formattedDate();
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaProvider style={styles.safeArea}>
         {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
         <View style={styles.viewContentContainer}>
           <View
@@ -144,7 +148,7 @@ export default class HomeScreen extends React.Component {
             onLayout={e => this.onTopContainerLayout(e)}
           >
             <View
-              style={styles.textContainer}
+              style={[styles.textContainer, {paddingTop: StatusBar.currentHeight}]}
               onLayout={e => this.onTextContainerLayout(e)}
             >
               <Text style={styles.text}>{dayOfWeek}</Text>
@@ -169,7 +173,7 @@ export default class HomeScreen extends React.Component {
             />
           </Animated.View>
         </View>
-      </SafeAreaView>
+      </SafeAreaProvider>
     );
   }
 }
