@@ -140,7 +140,7 @@ export default class HomeScreen extends React.Component {
   render() {
     let { dayOfWeek, today } = this.formattedDate();
     return (
-      <SafeAreaProvider style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea}>
         {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
         <View style={styles.viewContentContainer}>
           <View
@@ -173,7 +173,7 @@ export default class HomeScreen extends React.Component {
             />
           </Animated.View>
         </View>
-      </SafeAreaProvider>
+      </SafeAreaView>
     );
   }
 }
