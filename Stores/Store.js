@@ -7,17 +7,22 @@ export default class Store {
   }
 
   // Sorted array of dates
-  @observable dates = [];
+  @observable dates = []
   // Dictionary of tasks. content[date] returns an array of tasks
-  @observable content = {};
+  @observable content = {}
+
+  @observable loadedDates = false
+  @observable loadedContent = false
+  
 
   // Get dates and content from asyncStorage
   @action
   initFromStore() {
     AsyncStorage.getItem("dates").then(dates => {
       if (dates !== null) {
-        this.dates = JSON.parse(dates);
+        this.dates = JSON.parse(dates)
       }
+      this.loadedDates = true
     });
 
     AsyncStorage.getItem("content").then(content => {
@@ -34,6 +39,7 @@ export default class Store {
       if (content !== null) {
         this.content = JSON.parse(content);
       }
+      this.loadedContent = true
     });
   }
 
@@ -140,5 +146,10 @@ export default class Store {
     markedDates[today] = { selected: true };
 
     return markedDates;
+  }
+
+  @computed
+  get isDoneLoading() {
+    return this.loadedContent && this.loadedDates
   }
 }

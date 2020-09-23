@@ -7,6 +7,7 @@ import {
   Modal,
   Text,
   TouchableOpacity,
+  ActivityIndicator,
   TextInput,
   ScrollView,
   SafeAreaView,
@@ -125,19 +126,26 @@ class Agenda extends Component {
   render() {
     return (
       <View>
-        <FlatList
-          data={toJS(this.props.store.dates)}
-          renderItem={({ item }) => (
-            <DayInAgenda date={item} openModal={this.openModal} />
-          )}
-          keyExtractor={item => {
-            return item;
-          }}
-          ref={ref => {
-            this.flatListRef = ref;
-          }}
-          ListFooterComponent={this.renderFooter(this.props.store.dates.length)}
-        />
+        {
+          (this.props.store.isDoneLoading) ?
+            <FlatList
+              data={toJS(this.props.store.dates)}
+              renderItem={({ item }) => (
+                <DayInAgenda date={item} openModal={this.openModal} />
+              )}
+              keyExtractor={item => {
+                return item;
+              }}
+              ref={ref => {
+                this.flatListRef = ref;
+              }}
+              ListFooterComponent={this.renderFooter(this.props.store.dates.length)}
+            />
+            :
+            <View>
+              <ActivityIndicator size="large" style={{marginTop: 50}}/>
+            </View>
+        }
         <Modal
           animationType="slide"
           transparent={true}
