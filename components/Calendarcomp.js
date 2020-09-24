@@ -38,10 +38,14 @@ class Calendarcomp extends Component {
             textDisabledColor: "#b6c1cd"
           }}
           onDayLongPress={day => {
-            this.setState({ modalVisible: true, date: day.dateString });
+            if (this.props.store.isDoneLoading) {
+              this.setState({ modalVisible: true, date: day.dateString });
+            }
           }}
           onDayPress={day => {
-            this.props.scrollToDate(day.dateString)
+            if (this.props.store.isDoneLoading) {
+              this.props.scrollToDate(day.dateString)
+            }
           }}
         />
         <CreateTaskModal

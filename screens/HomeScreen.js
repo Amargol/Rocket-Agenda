@@ -137,41 +137,58 @@ export default class HomeScreen extends React.Component {
   // Create panResponder
   componentDidMount() {
   }
-  render() {
+
+  renderCalendar () {
     let { dayOfWeek, today } = this.formattedDate();
+
+    return (
+      <View
+        style={styles.topContainer}
+        onLayout={e => this.onTopContainerLayout(e)}
+      >
+        <View
+          style={[styles.textContainer, {paddingTop: StatusBar.currentHeight}]}
+          onLayout={e => this.onTextContainerLayout(e)}
+        >
+          <Text style={styles.text}>{dayOfWeek}</Text>
+          <Text style={styles.subText}>{today}</Text>
+        </View>
+        <Calendarcomp scrollToDate={this.scrollToDate.bind(this)} />
+      </View>
+    )
+  }
+
+  renderAgenda () {
+    return (
+      <Animated.View
+        style={[styles.movableReminderContainer, { top: this.state.pan }]}
+      >
+        <View
+          style={styles.grabBarContainer}
+          {...this._panResponder.panHandlers}
+        >
+          <View style={styles.grabBar} />
+        </View>
+        <Agenda
+          index={this.state.index}
+          resetIndex={() => {
+            this.setState({ index: null });
+          }}
+        />
+      </Animated.View>
+    )
+  }
+
+  render() {
     return (
       <SafeAreaView style={styles.safeArea}>
         {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
         <View style={styles.viewContentContainer}>
-          <View
-            style={styles.topContainer}
-            onLayout={e => this.onTopContainerLayout(e)}
-          >
-            <View
-              style={[styles.textContainer, {paddingTop: StatusBar.currentHeight}]}
-              onLayout={e => this.onTextContainerLayout(e)}
-            >
-              <Text style={styles.text}>{dayOfWeek}</Text>
-              <Text style={styles.subText}>{today}</Text>
-            </View>
-            <Calendarcomp scrollToDate={this.scrollToDate.bind(this)} />
-          </View>
-          <Animated.View
-            style={[styles.movableReminderContainer, { top: this.state.pan }]}
-          >
-            <View
-              style={styles.grabBarContainer}
-              {...this._panResponder.panHandlers}
-            >
-              <View style={styles.grabBar} />
-            </View>
-            <Agenda
-              index={this.state.index}
-              resetIndex={() => {
-                this.setState({ index: null });
-              }}
-            />
-          </Animated.View>
+
+          {this.renderCalendar()}
+
+          {this.renderAgenda()}
+          
         </View>
       </SafeAreaView>
     );

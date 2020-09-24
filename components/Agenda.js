@@ -111,6 +111,28 @@ class Agenda extends Component {
       return <View style={{ height: 90 }} />;
     }
   }
+
+  renderAgendaContent() {
+    return (this.props.store.isDoneLoading) ?
+      <FlatList
+        data={toJS(this.props.store.dates)}
+        renderItem={({ item }) => (
+          <DayInAgenda date={item} openModal={this.openModal} />
+        )}
+        keyExtractor={item => {
+          return item;
+        }}
+        ref={ref => {
+          this.flatListRef = ref;
+        }}
+        ListFooterComponent={this.renderFooter(this.props.store.dates.length)}
+      />
+      :
+      <View>
+        <ActivityIndicator size="large" style={{marginTop: 50}}/>
+      </View>
+  }
+
   componentDidUpdate() {
     let { store } = this.props;
 
@@ -123,81 +145,69 @@ class Agenda extends Component {
       this.props.resetIndex();
     }
   }
+
+  renderTaskModal() {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={this.state.modalVisible}
+        onRequestClose={this.closeModal}
+      >
+        {Platform.OS === "ios" ? <StatusBar barStyle="dark-content" /> : null}
+        <SafeAreaView
+          style={{
+            flex: 1,
+            backgroundColor: "#F5F5F5",
+            position: "relative"
+          }}
+        >
+          <View style={styles.modalContainer}>
+            <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
+              <Text style={styles.closeButton}>Close and Save</Text>
+            </TouchableOpacity>
+            <ScrollView>
+              <View style={styles.modalContentContainer}>
+                <View
+                  style={[
+                    styles.textContainer,
+                    {
+                      borderLeftWidth: 5,
+                      borderLeftColor: this.state.modalContent.color
+                    }
+                  ]}
+                >
+                  <Text style={styles.textStyle}>
+                    {this.state.modalContent.formattedDate}
+                  </Text>
+                  <Text style={styles.taskStyle}>
+                    {this.state.modalContent.task}
+                  </Text>
+                </View>
+                <View style={styles.textInputContainer}>
+                  <TextInput
+                    multiline={true}
+                    style={styles.textInput}
+                    placeholder={"Notes"}
+                    underlineColorAndroid="#F5F5F5"
+                    placeholderTextColor="black"
+                    onChangeText={this.saveText}
+                    defaultValue={this.state.modalContent.notes}
+                  />
+                </View>
+              </View>
+            </ScrollView>
+          </View>
+        </SafeAreaView>
+      </Modal>
+    )
+  }
+
   render() {
     return (
       <View>
-        {
-          (this.props.store.isDoneLoading) ?
-            <FlatList
-              data={toJS(this.props.store.dates)}
-              renderItem={({ item }) => (
-                <DayInAgenda date={item} openModal={this.openModal} />
-              )}
-              keyExtractor={item => {
-                return item;
-              }}
-              ref={ref => {
-                this.flatListRef = ref;
-              }}
-              ListFooterComponent={this.renderFooter(this.props.store.dates.length)}
-            />
-            :
-            <View>
-              <ActivityIndicator size="large" style={{marginTop: 50}}/>
-            </View>
-        }
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={this.closeModal}
-        >
-          {Platform.OS === "ios" ? <StatusBar barStyle="dark-content" /> : null}
-          <SafeAreaView
-            style={{
-              flex: 1,
-              backgroundColor: "#F5F5F5",
-              position: "relative"
-            }}
-          >
-            <View style={styles.modalContainer}>
-              <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
-                <Text style={styles.closeButton}>Close and Save</Text>
-              </TouchableOpacity>
-              <ScrollView>
-                <View style={styles.modalContentContainer}>
-                  <View
-                    style={[
-                      styles.textContainer,
-                      {
-                        borderLeftWidth: 5,
-                        borderLeftColor: this.state.modalContent.color
-                      }
-                    ]}
-                  >
-                    <Text style={styles.textStyle}>
-                      {this.state.modalContent.formattedDate}
-                    </Text>
-                    <Text style={styles.taskStyle}>
-                      {this.state.modalContent.task}
-                    </Text>
-                  </View>
-                  <View style={styles.textInputContainer}>
-                    <TextInput
-                      multiline={true}
-                      style={styles.textInput}
-                      placeholder={"Notes"}
-                      underlineColorAndroid="#F5F5F5"
-                      placeholderTextColor="black"
-                      onChangeText={this.saveText}
-                      defaultValue={this.state.modalContent.notes}
-                    />
-                  </View>
-                </View>
-              </ScrollView>
-            </View>
-          </SafeAreaView>
-        </Modal>
+        {this.renderAgendaContent()}
+        {this.renderTaskModal()}
       </View>
     );
   }

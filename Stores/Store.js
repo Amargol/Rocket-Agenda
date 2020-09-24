@@ -18,6 +18,8 @@ export default class Store {
   // Get dates and content from asyncStorage
   @action
   initFromStore() {
+
+    setTimeout(() => {
     AsyncStorage.getItem("dates").then(dates => {
       if (dates !== null) {
         this.dates = JSON.parse(dates)
@@ -41,6 +43,7 @@ export default class Store {
       }
       this.loadedContent = true
     });
+    }, 5000)
   }
 
   // Save dates and content to asyncStorage
