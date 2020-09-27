@@ -209,9 +209,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
   textContainer: {
-    paddingTop: 8,
-    paddingHorizontal: 10,
-    paddingBottom: 15
+    marginTop: 10,
+    paddingHorizontal: 15,
+    paddingBottom: 5
   },
   text: {
     fontFamily: "System",
