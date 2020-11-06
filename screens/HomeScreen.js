@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginTop: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 14,
     paddingBottom: 5
   },
   text: {
