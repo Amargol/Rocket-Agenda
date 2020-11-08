@@ -22,7 +22,7 @@ class Calendarcomp extends Component {
     this.setState({ modalVisible: false });
   }
   submitNewTask(task, date) {
-    this.props.store.addTask(task, date);
+    this.props.store.addTask(task, date, "");
   }
   render() {
     return (

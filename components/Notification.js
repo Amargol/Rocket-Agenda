@@ -19,6 +19,9 @@ class Notification extends Component {
     this.opacity = new Animated.Value(0)
     this.scale = new Animated.Value(0)
 
+    let messages = ["Congratulations", "Good Job", "Well Done", "Good Work"]
+    this.message = messages[Math.floor(Math.random()*messages.length)]
+
 
     let backgroundColors = ["#28a745", "#23CE6B", "#17B890"] //// bootstrap green, bright green, light green
     this.state = {
@@ -29,7 +32,7 @@ class Notification extends Component {
   componentDidMount () {
     this.fadeIn()
 
-    setTimeout(this.fadeOut, 6000 - 250); // if you change this, you must change duration notification lasts for in store
+    setTimeout(this.fadeOut, 8000 - 250); // if you change this, you must change duration notification lasts for in store
   }
 
   fadeOut = () => {
@@ -64,16 +67,11 @@ class Notification extends Component {
         useNativeDriver: true
       })
     ]).start()
-    
-    // Animated.timing(this.opacity, {
-    //   toValue: 1,
-    //   duration: 250,
-    //   useNativeDriver: true
-    // }).start()
   }
 
-  componentWillUnmount() {
+  undoHandler = () => {
     this.fadeOut()
+    this.props.undoTaskDelete()
   }
 
   render() {
@@ -85,11 +83,11 @@ class Notification extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.notificationContent}>
-          <Text style={[styles.system, styles.title]}>Congratulations</Text>
+          <Text style={[styles.system, styles.title]}>{this.message}</Text>
           <Text style={[styles.system]}>{this.props.item.task}</Text>
         </View>
         <View>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity activeOpacity={0.5} onPress={this.undoHandler}>
             <Text style={styles.undo}>Undo</Text>
           </TouchableOpacity>
         </View>

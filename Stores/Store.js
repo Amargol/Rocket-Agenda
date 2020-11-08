@@ -14,8 +14,8 @@ export default class Store {
   @observable loadedDates = false
   @observable loadedContent = false
 
-  @observable recentlyDeleted = [{task: "task", date: "date", notes: "notes", id: "id", backgroundNumber: 0}]
-  // @observable recentlyDeleted = []
+  // @observable recentlyDeleted = [{task: "task", date: "date", notes: "notes", id: "id", backgroundNumber: 0}]
+  @observable recentlyDeleted = []
 
   backgroundNumber = 0
   
@@ -60,7 +60,7 @@ export default class Store {
 
   // Adds a task
   @action
-  addTaskToNewDate(task, date) {
+  addTaskToNewDate(task, date, notes) {
     function isDateBigger(date1, date2) {
       date1 = date1.split("-");
       date2 = date2.split("-");
@@ -90,28 +90,28 @@ export default class Store {
       observable({
         task: task,
         id: Math.floor(Math.random() * 1000000000).toString(),
-        notes: ""
+        notes: notes
       })
     ]);
   }
 
   // Adds a task to an existing date
   @action
-  addTaskToExistingDate(task, date) {
+  addTaskToExistingDate(task, date, notes) {
     this.content[date].push({
       task: task,
       id: Math.floor(Math.random() * 1000000000).toString(),
-      notes: ""
+      notes: notes
     });
   }
 
   // Determines whether to use addTaskToNewDate or addTaskToExistingDate then calls saveToStore
   @action
-  addTask(task, date) {
+  addTask(task, date, notes) {
     if (this.content[date] === undefined) {
-      this.addTaskToNewDate(task, date);
+      this.addTaskToNewDate(task, date, notes);
     } else {
-      this.addTaskToExistingDate(task, date);
+      this.addTaskToExistingDate(task, date, notes);
     }
     this.saveToStore();
   }
@@ -153,7 +153,7 @@ export default class Store {
 
       this.recentlyDeleted.splice(ix, 1)
       
-    }, 6000); // if you change this, you must change callback in notification constructor to be x - duration
+    }, 8000); // if you change this, you must change callback in notification constructor to be x - duration
   }
 
   // Defines which dates on the calendar are marked in accordance to react-native-calendars

@@ -142,9 +142,13 @@ export default class HomeScreen extends React.Component {
   componentDidMount() {
   }
 
+  undoTaskDelete = (task) => {
+    this.props.store.addTask(task.task, task.date, task.notes);
+  }
+
   renderNotifications () {
     const notifications = this.props.store.recentlyDeleted.map((item) => 
-      <Notification key={item.id} item={item} />
+      <Notification key={item.id} item={item} undoTaskDelete={() => this.undoTaskDelete(item)} />
     )
     return (
       <View style={styles.notificationContainer}>
