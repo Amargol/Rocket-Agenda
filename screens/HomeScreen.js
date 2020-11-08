@@ -130,7 +130,7 @@ export default class HomeScreen extends React.Component {
   onTextContainerLayout(e) {
     let textY = e.nativeEvent.layout.height + e.nativeEvent.layout.y;
     this.setState({
-      yOfText: textY
+      yOfText: textY + 10
     });
   }
   // Tells the agenda component to scroll to a date

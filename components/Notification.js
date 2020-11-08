@@ -83,8 +83,8 @@ class Notification extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.notificationContent}>
-          <Text style={[styles.system, styles.title]}>{this.message}</Text>
-          <Text style={[styles.system]}>{this.props.item.task}</Text>
+          <Text style={[styles.system, styles.title]} numberOfLines={1} ellipsizeMode='tail'>{this.message}</Text>
+          <Text style={[styles.system]} numberOfLines={1} ellipsizeMode='tail'>{this.props.item.task}</Text>
         </View>
         <View>
           <TouchableOpacity activeOpacity={0.5} onPress={this.undoHandler}>
@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
   undo: {
     paddingVertical: 15,
     color: "white",
-    opacity: .8
+    opacity: .8,
+    paddingRight: 5
   }
 });
 
