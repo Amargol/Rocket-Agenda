@@ -13,6 +13,11 @@ export default class Store {
 
   @observable loadedDates = false
   @observable loadedContent = false
+
+  @observable recentlyDeleted = [{task: "task", date: "date", notes: "notes", id: "id", backgroundNumber: 0}]
+  // @observable recentlyDeleted = []
+
+  backgroundNumber = 0
   
 
   // Get dates and content from asyncStorage
@@ -127,7 +132,28 @@ export default class Store {
         1
       );
     }
+
+    this.addToRecentlyDeletedQueue(task.task, date, task.notes, task.id)
+
     this.saveToStore();
+  }
+
+  @action
+  addToRecentlyDeletedQueue(task, date, notes, id) {
+    this.recentlyDeleted.push({task: task, date: date, notes: notes, id: id, backgroundNumber: this.backgroundNumber})
+
+    this.backgroundNumber = (this.backgroundNumber + 1) % 9
+
+    setTimeout(() => {
+      ix = this.recentlyDeleted.map(e => e.id).indexOf(id)
+
+      if (ix == -1) {
+        return
+      }
+
+      this.recentlyDeleted.splice(ix, 1)
+      
+    }, 5000);
   }
 
   // Defines which dates on the calendar are marked in accordance to react-native-calendars

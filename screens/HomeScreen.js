@@ -12,9 +12,13 @@ import {
   Platform
 } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { observer, inject } from "mobx-react";
 import Calendarcomp from "../components/Calendarcomp";
+import Notification from "../components/Notification";
 import Agenda from "../components/Agenda";
 
+@inject("store")
+@observer
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -138,6 +142,17 @@ export default class HomeScreen extends React.Component {
   componentDidMount() {
   }
 
+  renderNotifications () {
+    const notifications = this.props.store.recentlyDeleted.map((item) => 
+      <Notification key={item.id} item={item} />
+    )
+    return (
+      <View style={styles.notificationContainer}>
+        {notifications}
+      </View>
+    )
+  }
+
   renderCalendar () {
     let { dayOfWeek, today } = this.formattedDate();
 
@@ -184,7 +199,9 @@ export default class HomeScreen extends React.Component {
       <SafeAreaView style={styles.safeArea}>
         {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
         <View style={styles.viewContentContainer}>
-
+          
+          {this.renderNotifications()}
+          
           {this.renderCalendar()}
 
           {this.renderAgenda()}
@@ -249,5 +266,12 @@ const styles = StyleSheet.create({
     borderRadius: 1.5,
     width: Dimensions.get("window").width / 5,
     backgroundColor: "#C7C5BF"
-  }
+  },
+  notificationContainer: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    right: 10,
+    zIndex: 1000,
+  },
 });
