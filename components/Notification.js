@@ -10,11 +10,12 @@ import {
   Animated
 } from "react-native";
 
+import { FontAwesome } from '@expo/vector-icons'; 
 // create a component
 class Notification extends Component {
   constructor(props) {
     super(props);
-    let backgroundColors = ["#28a745", "#23CE6B", "#17B890"]
+    let backgroundColors = ["#28a745", "#23CE6B", "#17B890"] //// bootstrap green, bright green, light green
     this.state = {
       backgroundColor: backgroundColors[props.item.backgroundNumber % backgroundColors.length]
     };
@@ -22,15 +23,19 @@ class Notification extends Component {
   render() {
     return (
       <View style={[styles.notificationContainer, {backgroundColor: this.state.backgroundColor}]}>
-        <View>
-          <Text>Check</Text>
+        <View style={{paddingRight: 8}}>
+          <TouchableOpacity activeOpacity={0.5}>
+            <FontAwesome name="check" size={40} color="white" style={{paddingVertical: 5}}/>
+          </TouchableOpacity>
         </View>
         <View style={styles.notificationContent}>
-          <Text style={[styles.system, styles.title]}>Congradulations</Text>
+          <Text style={[styles.system, styles.title]}>Congratulations</Text>
           <Text style={[styles.system]}>{this.props.item.task}</Text>
         </View>
         <View>
-          <Text>Undo</Text>
+          <TouchableOpacity activeOpacity={0.5}>
+            <Text style={styles.undo}>Undo</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -49,14 +54,10 @@ const styles = StyleSheet.create({
   },
   notificationContainer: {
     position: "absolute",
-    // Colors are picked in a rotating in the state
-    // backgroundColor: "#28a745", // bootstrap green
-    // backgroundColor: "#23CE6B", // bright green
-    // backgroundColor: "#17B890", // light green
     top: 0,
     left: 0,
     right: 0,
-    borderRadius: 10,
+    borderRadius: 5,
     display: "flex",
     flexDirection: "row",
     padding: 10,
@@ -64,7 +65,15 @@ const styles = StyleSheet.create({
   },
   notificationContent: {
     flex: 1,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderLeftWidth: 1,
+    borderLeftColor: "white",
+  },
+  undo: {
+    paddingVertical: 15,
+    color: "white",
+    opacity: .8
   }
 });
 
