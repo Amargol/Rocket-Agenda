@@ -153,7 +153,7 @@ export default class Store {
 
       this.recentlyDeleted.splice(ix, 1)
       
-    }, 5000);
+    }, 6000); // if you change this, you must change callback in notification constructor to be x - duration
   }
 
   // Defines which dates on the calendar are marked in accordance to react-native-calendars
