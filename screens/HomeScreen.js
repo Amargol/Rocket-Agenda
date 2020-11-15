@@ -273,9 +273,9 @@ const styles = StyleSheet.create({
   },
   notificationContainer: {
     position: "absolute",
-    top: 6,
-    left: 12,
-    right: 12,
+    top: 8,
+    left: 10,
+    right: 10,
     zIndex: 1000,
   },
 });

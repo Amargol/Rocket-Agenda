@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     color: "white",
     opacity: .8,
-    paddingRight: 5
+    paddingRight: 8
   }
 });
 
