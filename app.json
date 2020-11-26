@@ -12,7 +12,7 @@
     ],
     "version": "5.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon_without_alpha.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
