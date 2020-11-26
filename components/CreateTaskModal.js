@@ -75,7 +75,9 @@ class CreateTaskModal extends Component {
               onSubmitEditing={this.submit}
             />
             <TouchableOpacity activeOpacity={0.5} onPress={this.submit}>
-              <Text style={styles.submitButton}>Submit</Text>
+              <View style={styles.submitButton}>
+                <Text style={styles.submitText}>Submit</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -116,15 +118,18 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   submitButton: {
-    fontFamily: "System",
-    fontWeight: "700",
-    fontSize: 20,
     backgroundColor: "#333248",
-    color: "white",
     paddingVertical: 7,
     paddingHorizontal: 15,
     borderTopRightRadius: 7,
-    borderBottomRightRadius: 7
+    borderBottomRightRadius: 7,
+    overflow: "hidden"
+  },
+  submitText: {
+    fontFamily: "System",
+    fontWeight: "700",
+    fontSize: 20,
+    color: "white"
   }
 });
 

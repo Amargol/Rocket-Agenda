@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   notificationContent: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingLeft: 10,
     paddingVertical: 5,
     borderLeftWidth: 1,
     borderLeftColor: "white",
@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     color: "white",
     opacity: .8,
-    paddingRight: 8
+    paddingRight: 8,
+    paddingLeft: 15
   }
 });
 
