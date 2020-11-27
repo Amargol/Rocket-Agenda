@@ -40,10 +40,10 @@ export default class HomeScreen extends React.Component {
         this.state.pan.setOffset(this.state.pan._value);
         this.state.pan.setValue(0);
       },
-      onPanResponderMove: Animated.event(
-        [null, { dx: null, dy: this.state.pan }],
-        { useNativeDriver: true }
-      ),
+      onPanResponderMove: Animated.event([
+        null,
+        { dx: null, dy: this.state.pan }
+      ]),
       onPanResponderRelease: (e, { vx, vy }) => {
         this.state.pan.flattenOffset();
         return this.isMovementThresholdCrossed()
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginTop: 10,
-    paddingHorizontal: 14,
+    paddingHorizontal: 17,
     paddingBottom: 5
   },
   text: {
