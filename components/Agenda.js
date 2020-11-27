@@ -72,7 +72,7 @@ class Agenda extends Component {
       return (
         <View style={{ padding: 20 }}>
           <Text style={styles.tutorialTextHeader}>
-            You don't have any tasks yet :)
+            You don't have any tasks yet
           </Text>
           <View style={{ marginVertical: 10 }}>
             <Text style={styles.tutorialText}>
