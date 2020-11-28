@@ -22,6 +22,7 @@ class Notification extends Component {
     let messages = ["Congratulations", "Good Job", "Well Done", "Good Work"]
     this.message = messages[Math.floor(Math.random()*messages.length)]
 
+    this.active = true
 
     let backgroundColors = ["#28a745", "#23CE6B", "#17B890"] //// bootstrap green, bright green, light green
     this.state = {
@@ -70,8 +71,12 @@ class Notification extends Component {
   }
 
   undoHandler = () => {
-    this.fadeOut()
-    this.props.undoTaskDelete()
+    if (this.active) {
+      this.fadeOut()
+      this.props.undoTaskDelete()
+      this.active = false
+      console.log("oh")
+    }
   }
 
   render() {

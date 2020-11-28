@@ -9,7 +9,7 @@ import {
   PanResponder,
   Animated,
   StatusBar,
-  Platform
+  Platform,
 } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { observer, inject } from "mobx-react";
@@ -151,7 +151,7 @@ export default class HomeScreen extends React.Component {
       <Notification key={item.id} item={item} undoTaskDelete={() => this.undoTaskDelete(item)} />
     )
     return (
-      <View style={styles.notificationContainer}>
+      <View style={[styles.notificationContainer, {top: Platform.OS === "ios" ? 8 : StatusBar.currentHeight + 8}]}>
         {notifications}
       </View>
     )
@@ -200,18 +200,21 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
-        <View style={styles.viewContentContainer}>
-          
-          {this.renderNotifications()}
-          
-          {this.renderCalendar()}
+      <>
+        <SafeAreaView style={{flex: 0, backgroundColor: "#333248"}}/>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={{flex: 1, backgroundColor: "#333248"}}>
+            {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
+            <View style={styles.viewContentContainer}>
+              {this.renderCalendar()}
 
-          {this.renderAgenda()}
-          
-        </View>
-      </SafeAreaView>
+              {this.renderAgenda()}
+              
+              {this.renderNotifications()}
+            </View>
+          </View>
+        </SafeAreaView>
+      </>
     );
   }
 }
@@ -219,7 +222,7 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#333248"
+    backgroundColor: "white"
   },
   viewContentContainer: {
     position: "relative",
@@ -276,6 +279,5 @@ const styles = StyleSheet.create({
     top: 8,
     left: 10,
     right: 10,
-    zIndex: 1000,
   },
 });
