@@ -12,7 +12,8 @@ import {
   ScrollView,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  KeyboardAvoidingView
 } from "react-native";
 import { observer, inject } from "mobx-react";
 import { toJS } from "mobx";
@@ -85,7 +86,7 @@ class Agenda extends Component {
               Touch a date on the calendar to scroll to it
             </Text>
             <Text style={styles.tutorialText}>
-              Touch a task to attach a note to it
+              Tap a task to attach a note to it
             </Text>
           </View>
           <View style={{paddingBottom: 70}}>
@@ -166,7 +167,7 @@ class Agenda extends Component {
             <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
               <Text style={styles.closeButton}>Close and Save</Text>
             </TouchableOpacity>
-            <ScrollView>
+            <ScrollView style={{marginBottom: 15}}>
               <View style={styles.modalContentContainer}>
                 <View
                   style={[
@@ -193,6 +194,7 @@ class Agenda extends Component {
                     placeholderTextColor="black"
                     onChangeText={this.saveText}
                     defaultValue={this.state.modalContent.notes}
+                    scrollEnabled={false}
                   />
                 </View>
               </View>
@@ -227,7 +229,8 @@ const styles = StyleSheet.create({
     padding: 17
   },
   modalContentContainer: {
-    margin: 15
+    marginHorizontal: 15,
+    marginTop: 15
   },
   textContainer: {
     marginBottom: 15,
@@ -250,12 +253,13 @@ const styles = StyleSheet.create({
   textInputContainer: {
     backgroundColor: "#F5F5F5",
     borderRadius: 5,
-    // padding: 10,
-    marginBottom: 20
+    paddingHorizontal: 14,
+    paddingBottom: 12,
+    paddingTop: 7,
   },
   textInput: {
-    padding: 10
-    // paddingBottom: 5
+    // padding: 10
+    paddingBottom: 0
   },
   tutorialTextHeader: {
     fontSize: 23,

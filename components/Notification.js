@@ -75,7 +75,6 @@ class Notification extends Component {
       this.fadeOut()
       this.props.undoTaskDelete()
       this.active = false
-      console.log("oh")
     }
   }
 
@@ -109,7 +108,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    marginBottom: 2
   },
   notificationContainer: {
     position: "absolute",
@@ -120,7 +120,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     padding: 10,
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: -5
   },
   notificationContent: {
     flex: 1,

@@ -43,7 +43,9 @@ export default class HomeScreen extends React.Component {
       onPanResponderMove: Animated.event([
         null,
         { dx: null, dy: this.state.pan }
-      ]),
+      ],
+      { useNativeDriver: false } // delete this line and previous comma if panresponder breaks
+      ),
       onPanResponderRelease: (e, { vx, vy }) => {
         this.state.pan.flattenOffset();
         return this.isMovementThresholdCrossed()
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
   notificationContainer: {
     position: "absolute",
     top: 8,
-    left: 10,
-    right: 10,
+    left: 16,
+    right: 16,
   },
 });
