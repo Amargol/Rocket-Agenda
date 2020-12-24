@@ -10,6 +10,8 @@ import {
   StyleSheet
 } from "react-native";
 
+import NotificationSettings from "./NotificationSettings"
+
 // create a component
 class CreateTaskModal extends Component {
   constructor(props) {
@@ -67,6 +69,7 @@ class CreateTaskModal extends Component {
           </Text>
           <View style={styles.inputContainer}>
             <TextInput
+              placeholder="Buy groceries"
               autoCapitalize="sentences"
               autoFocus={true}
               underlineColorAndroid="#eee"
@@ -74,10 +77,13 @@ class CreateTaskModal extends Component {
               onChangeText={text => this.setState({ text })}
               onSubmitEditing={this.submit}
             />
+          </View>
+          <View>
+            <NotificationSettings />
+          </View>
+          <View style={styles.submitButton}>
             <TouchableOpacity activeOpacity={0.5} onPress={this.submit}>
-              <View style={styles.submitButton}>
-                <Text style={styles.submitText}>Submit</Text>
-              </View>
+              <Text style={styles.submitText}>Submit</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -105,8 +111,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#eee",
     borderRadius: 7,
-    marginVertical: 5,
-    marginRight: 3
+    marginTop: 10,
+    marginBottom: 5,
+    marginRight: 3,
+    minHeight: 38
   },
   inputStyle: {
     flex: 1,
@@ -121,15 +129,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#333248",
     paddingVertical: 7,
     paddingHorizontal: 15,
-    borderTopRightRadius: 7,
-    borderBottomRightRadius: 7,
-    overflow: "hidden"
+    borderRadius: 7,
+    overflow: "hidden",
+    marginTop: 7
   },
   submitText: {
     fontFamily: "System",
     fontWeight: "700",
     fontSize: 20,
-    color: "white"
+    color: "white",
+    textAlign: "center",
   }
 });
 
