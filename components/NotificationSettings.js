@@ -17,6 +17,8 @@ import { FontAwesome } from '@expo/vector-icons';
 class NotificationSettings extends Component {
   constructor(props) {
     super(props);
+    this.scale = new Animated.Value(0)
+    
     this.state = {
       switch: false,
       notificationDay: 0,
@@ -24,9 +26,26 @@ class NotificationSettings extends Component {
   }
 
   toggleSwitch = () => {
+    let st = this.state.switch
+
     this.setState({
       switch: !this.state.switch
     })
+
+    if (st) {
+      Animated.timing(this.scale, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false
+      }).start()
+    } else {
+      Animated.timing(this.scale, {
+        toValue: 100,
+        duration: 200,
+        useNativeDriver: false
+      }).start()
+
+    }
   }
 
   updateNotificationDay = (delta) => {
@@ -70,8 +89,7 @@ class NotificationSettings extends Component {
             value={this.state.switch}
           />
         </View>
-        {this.state.switch ? 
-        <View>
+        <Animated.View style={{height: this.scale, overflow: "hidden"}}>
           <View>
             <View style={styles.inputContainer}>
               <TextInput
@@ -105,8 +123,7 @@ class NotificationSettings extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-        : null }
+        </Animated.View>
       </View>
     );
   }
