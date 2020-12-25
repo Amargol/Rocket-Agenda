@@ -12,6 +12,8 @@ import {
   Animated
 } from "react-native";
 
+import * as chrono from 'chrono-node';
+
 import { FontAwesome } from '@expo/vector-icons'; 
 // create a component
 class NotificationSettings extends Component {
@@ -22,15 +24,49 @@ class NotificationSettings extends Component {
     this.state = {
       switch: false,
       notificationDay: 0,
+      time: ""
     };
   }
 
-  toggleSwitch = () => {
-    let st = this.state.switch
+  formatTime = (date) => {
+    if (date == null) {
+      return ""
+    }
 
-    this.setState({
-      switch: !this.state.switch
-    })
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }
+
+  computedNotificationTime = () => {
+    if (this.state.time === "") {
+      return "8:05 AM"
+    }
+
+    let time = this.state.time
+
+    time = chrono.parseDate(time)
+
+    let result = this.formatTime(time)
+    
+    if (result == "") {
+      result = "?"
+    }
+
+    return result
+  }
+
+  toggleSwitch = () => {
+    // use chrono to get time for task and subtract 5 mins and calculate different time/date
+    // Then setstate so that everything is set up/reset and use dotthen to trigger animation
+    // Foxus time text
+
+    let st = this.state.switch
 
     if (st) {
       Animated.timing(this.scale, {
@@ -38,14 +74,42 @@ class NotificationSettings extends Component {
         duration: 200,
         useNativeDriver: false
       }).start()
-    } else {
+
+      this.setState({
+        switch: !this.state.switch
+      })  
+
+      return
+    }
+
+    let taskText = this.props.taskText
+
+    let ch = chrono.parseDate(taskText)
+
+    // subtract 5 mins
+    if (ch != null) {
+      ch = new Date(ch.getTime() - 5 * 60000)
+    }
+
+    let time = this.formatTime(ch)
+
+    let notificationDay = 0
+    if (time == "11:55 PM" || time == "11:56 PM" || time == "11:57 PM" || time == "11:58 PM" || time == "11:59 PM") {
+      notificationDay = -1
+    }
+
+    this.setState({
+      switch: !this.state.switch,
+      time: time,
+      notificationDay: notificationDay
+    }, () => {
       Animated.timing(this.scale, {
         toValue: 100,
         duration: 200,
         useNativeDriver: false
       }).start()
+    })
 
-    }
   }
 
   updateNotificationDay = (delta) => {
@@ -98,11 +162,12 @@ class NotificationSettings extends Component {
                 // autoFocus={true}
                 underlineColorAndroid="#eee"
                 style={styles.inputStyle}
-                // onChangeText={text => this.setState({ text })}
-                // onSubmitEditing={this.submit}
+                onChangeText={time => this.setState({ time })}
+                value={this.state.time}
+                onSubmitEditing={this.props.submit}
               />
               <View style={styles.calculatedTime}>
-                <Text style={styles.calculatedTimeText}>8:05 AM</Text>
+                <Text style={styles.calculatedTimeText}>{this.computedNotificationTime()}</Text>
               </View>
             </View>
           </View>
@@ -166,7 +231,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#D8D8D8"
   },
   calculatedTimeText: {
-    color: "#686868"
+    color: "#686868",
+    minWidth: 55,
+    textAlign: "center"
   },
   dayChangeButtonLeft: {
     paddingVertical: 12,

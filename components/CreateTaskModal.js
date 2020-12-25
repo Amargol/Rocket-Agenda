@@ -79,7 +79,7 @@ class CreateTaskModal extends Component {
             />
           </View>
           <View>
-            <NotificationSettings />
+            <NotificationSettings taskText={this.state.text} submit={this.submit}/>
           </View>
           <View style={styles.submitButton}>
             <TouchableOpacity activeOpacity={0.5} onPress={this.submit}>
