@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   notificationContainer: {
     position: "absolute",
     top: 8,
-    left: 16,
-    right: 16,
+    left: 10,
+    right: 10,
   },
 });

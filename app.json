@@ -34,7 +34,8 @@
     },
     "android": {
       "package": "com.amargol.rocketagenda",
-      "versionCode": 5
+      "versionCode": 5,
+      "useNextNotificationsApi": true
     }
   }
 }

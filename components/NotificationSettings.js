@@ -12,6 +12,8 @@ import {
   Animated
 } from "react-native";
 
+import * as Notifications from 'expo-notifications';
+
 import * as chrono from 'chrono-node';
 
 import { FontAwesome } from '@expo/vector-icons'; 
@@ -61,10 +63,39 @@ class NotificationSettings extends Component {
     return result
   }
 
-  toggleSwitch = () => {
+  toggleSwitch = async () => {
     // use chrono to get time for task and subtract 5 mins and calculate different time/date
     // Then setstate so that everything is set up/reset and use dotthen to trigger animation
     // Foxus time text
+
+    // Start
+    await Notifications.requestPermissionsAsync({
+      ios: {
+        allowAlert: true,
+        allowSound: true,
+      },
+    });
+  
+    await Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      }),
+    });
+
+    const identifier = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Remember to drink water!',
+        autoDismiss: false,
+      },
+      trigger: {
+        seconds: 5
+      }
+    });
+
+    await Notifications.cancelScheduledNotificationAsync(identifier);
+    // End
 
     let st = this.state.switch
 

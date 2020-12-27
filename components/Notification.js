@@ -24,7 +24,7 @@ class Notification extends Component {
 
     this.active = true
 
-    let backgroundColors = ["#28a745", "#23CE6B", "#17B890"] //// bootstrap green, bright green, light green
+    let backgroundColors = ["#23CE6B", "#17B890", "#28a745"] //// bootstrap green, bright green, light green
     this.state = {
       backgroundColor: backgroundColors[props.item.backgroundNumber % backgroundColors.length]
     };
