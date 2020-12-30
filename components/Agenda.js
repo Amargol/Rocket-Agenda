@@ -260,49 +260,49 @@ class Agenda extends Component {
           }}
         >
           <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={{flex: 1}}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{flex: 1}}
           >
-          <View style={styles.modalContainer}>
-            <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
-              <Text style={styles.closeButton}>Close and Save</Text>
-            </TouchableOpacity>
-            <ScrollView style={{marginBottom: 15}}>
-              <View style={styles.modalContentContainer}>
-                <View
-                  style={[
-                    styles.textContainer,
-                    {
-                      borderLeftWidth: 5,
-                      borderLeftColor: this.state.modalContent.color
-                    }
-                  ]}
-                >
-                  <Text style={styles.textStyle}>
-                    {this.state.modalContent.formattedDate}
-                  </Text>
-                  <Text style={styles.taskStyle}>
-                    {this.state.modalContent.task}
-                  </Text>
+            <View style={styles.modalContainer}>
+              <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
+                <Text style={styles.closeButton}>Close and Save</Text>
+              </TouchableOpacity>
+              <ScrollView style={{marginBottom: 15}}>
+                <View style={styles.modalContentContainer}>
+                  <View
+                    style={[
+                      styles.textContainer,
+                      {
+                        borderLeftWidth: 5,
+                        borderLeftColor: this.state.modalContent.color
+                      }
+                    ]}
+                  >
+                    <Text style={styles.textStyle}>
+                      {this.state.modalContent.formattedDate}
+                    </Text>
+                    <Text style={styles.taskStyle}>
+                      {this.state.modalContent.task}
+                    </Text>
+                  </View>
+                  <View>
+                    <NotificationSettings taskText={this.state.modalContent.task} initial={this.state.modalContent.notificationSettings} submit={() => {Keyboard.dismiss()}} ref={this.notificationSettings} type="Update"/>
+                  </View>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      multiline={true}
+                      style={styles.textInput}
+                      placeholder={"Notes"}
+                      underlineColorAndroid="#F5F5F5"
+                      placeholderTextColor="black"
+                      onChangeText={this.saveText}
+                      defaultValue={this.state.modalContent.notes}
+                      scrollEnabled={false}
+                    />
+                  </View>
                 </View>
-                <View>
-                  <NotificationSettings taskText={this.state.modalContent.task} initial={this.state.modalContent.notificationSettings} submit={() => {Keyboard.dismiss()}} ref={this.notificationSettings} type="Update"/>
-                </View>
-                <View style={styles.textInputContainer}>
-                  <TextInput
-                    multiline={true}
-                    style={styles.textInput}
-                    placeholder={"Notes"}
-                    underlineColorAndroid="#F5F5F5"
-                    placeholderTextColor="black"
-                    onChangeText={this.saveText}
-                    defaultValue={this.state.modalContent.notes}
-                    scrollEnabled={false}
-                  />
-                </View>
-              </View>
-            </ScrollView>
-          </View>
+              </ScrollView>
+            </View>
           </KeyboardAvoidingView>
         </SafeAreaView>
       </Modal>
