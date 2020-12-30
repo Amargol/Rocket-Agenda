@@ -18,6 +18,8 @@ import {
 import { observer, inject } from "mobx-react";
 import { toJS } from "mobx";
 import DayInAgenda from "./DayInAgenda";
+import NotificationSettings from "./NotificationSettings";
+import * as Notifications from 'expo-notifications';
 
 // create a component
 @inject("store")
@@ -28,6 +30,7 @@ class Agenda extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
     this.saveText = this.saveText.bind(this);
+    this.notificationSettings = React.createRef()
     this.state = {
       modalVisible: false,
       modalContent: {
@@ -36,11 +39,18 @@ class Agenda extends Component {
         task: "",
         color: "white",
         notes: "",
-        id: ""
+        id: "",
+        notificationSettings: {}
       }
     };
   }
-  openModal(date, formattedDate, task, color, notes, id) {
+  openModal(date, formattedDate, task, color, notes, id, notificationSettings) {
+    if (notificationSettings.notifying && (new Date()) > (new Date(notificationSettings.dateTimeObj))) {
+      notificationSettings = {
+        notifying: false
+      }
+    }
+
     this.setState({
       modalVisible: true,
       modalContent: {
@@ -49,25 +59,110 @@ class Agenda extends Component {
         task: task,
         color: color,
         notes: notes,
-        id: id
+        id: id,
+        notificationSettings: notificationSettings
       }
-    });
+    })
   }
-  closeModal() {
-    this.setState({ modalVisible: false });
+  
+  async closeModal() {
+    let notificationSettings = this.notificationSettings.current.getTimingData(this.getFormattedDateForChrono(this.state.modalContent.date))
+
+    if (notificationSettings === null) {
+      alert('Please enter a valid notification time')
+      return
+    }
+
+    if (notificationSettings.notifying && (new Date()) > notificationSettings.dateTimeObj) {
+      alert('Notification time must be in the future')
+      return
+    }
+
+    let prev = this.state.modalContent.notificationSettings
+
+    if (prev.notifying) {
+      Notifications.cancelScheduledNotificationAsync(prev.identifier);
+    }
+
+    if (notificationSettings.notifying && (new Date()) < (new Date(notificationSettings.dateTimeObj))) {
+
+      let notificationDayString = "Today"
+
+      if (notificationSettings.notificationDay == -1) {
+        notificationDayString = "Tomorrow"
+      } else if (notificationSettings.notificationDay == 1) {
+        notificationDayString = "Yesterday"
+      } else if (notificationSettings.notificationDay < -1) {
+        notificationDayString = "In " + (-notificationSettings.notificationDay) + " days"
+      } else if (notificationSettings.notificationDay > 1) {
+        notificationDayString = (notificationSettings.notificationDay) + " days ago"
+      }
+
+
+      notificationSettings.identifier = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: this.state.modalContent.task,
+          message: notificationDayString,
+          body: notificationDayString,
+          autoDismiss: false,
+        },
+        trigger: new Date(notificationSettings.dateTimeObj)
+      });
+    }
+
+    this.updateTime(notificationSettings)
+
+    this.setState({ modalVisible: false })
   }
+
   saveText(value) {
     let { modalContent } = this.state;
     let { store } = this.props;
 
     let index = store.content[modalContent.date]
       .map(e => e.id)
-      .indexOf(modalContent.id);
+      .indexOf(modalContent.id)
 
     store.content[modalContent.date][index].notes = value;
 
     store.saveToStore();
   }
+
+  updateTime(notificationSettings) {
+    let { modalContent } = this.state;
+    let { store } = this.props;
+
+    let index = store.content[modalContent.date]
+      .map(e => e.id)
+      .indexOf(modalContent.id)
+    
+    store.content[modalContent.date][index].notificationSettings = notificationSettings;
+    
+    store.saveToStore();
+  }
+  
+  getFormattedDateForChrono (date) {
+    let dateArr = date.split("-");
+    let months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    let dayNum = parseInt(dateArr[2]);
+    let month = months[parseInt(dateArr[1] - 1, 10)];
+    let year = dateArr[0];
+    return dayNum + " " + month + " " + year
+  }
+
   renderFooter(length) {
     if (length === 0) {
       return (
@@ -185,6 +280,9 @@ class Agenda extends Component {
                     {this.state.modalContent.task}
                   </Text>
                 </View>
+                <View>
+                  <NotificationSettings taskText={this.state.modalContent.task} initial={this.state.modalContent.notificationSettings} submit={this.updateTime} ref={this.notificationSettings} type="Update"/>
+                </View>
                 <View style={styles.textInputContainer}>
                   <TextInput
                     multiline={true}
@@ -233,7 +331,7 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   textContainer: {
-    marginBottom: 15,
+    marginBottom: 6,
     paddingHorizontal: 7,
     marginVertical: 2
   },
@@ -251,11 +349,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 1
   },
   textInputContainer: {
-    backgroundColor: "#F5F5F5",
-    borderRadius: 5,
+    backgroundColor: "#eee",
+    borderRadius: 7,
     paddingHorizontal: 14,
     paddingBottom: 12,
     paddingTop: 7,
+    marginTop: 7
   },
   textInput: {
     // padding: 10

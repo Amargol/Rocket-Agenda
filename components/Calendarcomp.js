@@ -10,19 +10,19 @@ import CreateTaskModal from "./CreateTaskModal";
 @observer
 class Calendarcomp extends Component {
   constructor(props) {
-    super(props);
-    this.closeModal = this.closeModal.bind(this);
-    this.submitNewTask = this.submitNewTask.bind(this);
+    super(props)
+    this.closeModal = this.closeModal.bind(this)
+    this.submitNewTask = this.submitNewTask.bind(this)
     this.state = {
       modalVisible: false,
       date: "2001-01-01"
     };
   }
   closeModal() {
-    this.setState({ modalVisible: false });
+    this.setState({ modalVisible: false })
   }
-  submitNewTask(task, date) {
-    this.props.store.addTask(task, date, "");
+  submitNewTask(task, date, notificationSettings) {
+    this.props.store.addTask(task, date, "", notificationSettings);
   }
   render() {
     return (

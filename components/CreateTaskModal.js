@@ -16,6 +16,7 @@ import NotificationSettings from "./NotificationSettings"
 class CreateTaskModal extends Component {
   constructor(props) {
     super(props);
+    this.notificationSettings = React.createRef()
     this.submit = this.submit.bind(this);
     this.state = {
       text: ""
@@ -42,16 +43,54 @@ class CreateTaskModal extends Component {
     let year = dateArr[0];
     return month + " " + dayNum + ", " + year;
   }
-  submit() {
-    let text = this.state.text;
-    if (text !== "") {
-      this.props.submitNewTask(text, this.props.date);
-      this.setState({ text: "" });
-      this.props.closeModal();  
-    } else {
-      alert('Please enter a task')
-    }
+
+  getFormattedDateForChrono (date) {
+    let dateArr = date.split("-");
+    let months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    let dayNum = parseInt(dateArr[2]);
+    let month = months[parseInt(dateArr[1] - 1, 10)];
+    let year = dateArr[0];
+    return dayNum + " " + month + " " + year
   }
+
+  submit () {
+    let text = this.state.text;
+
+    if (text === "") {
+      alert('Please enter a task')
+      return
+    }
+
+    let notificationSettings = this.notificationSettings.current.getTimingData(this.getFormattedDateForChrono(this.props.date))
+
+    if (notificationSettings === null) {
+      alert('Please enter a valid notification time')
+      return
+    }
+
+    if (notificationSettings.notifying && (new Date()) > notificationSettings.dateTimeObj) {
+      alert('Notification time must be in the future')
+      return
+    }
+
+    this.props.submitNewTask(text, this.props.date, notificationSettings);
+    this.setState({ text: "" });
+    this.props.closeModal();  
+  }
+
   render() {
     return (
       <Modal
@@ -76,15 +115,11 @@ class CreateTaskModal extends Component {
               style={styles.inputStyle}
               onChangeText={text => this.setState({ text })}
               onSubmitEditing={this.submit}
+              returnKeyType="go"
             />
           </View>
           <View>
-            <NotificationSettings taskText={this.state.text} submit={this.submit}/>
-          </View>
-          <View style={styles.submitButton}>
-            <TouchableOpacity activeOpacity={0.5} onPress={this.submit}>
-              <Text style={styles.submitText}>Submit</Text>
-            </TouchableOpacity>
+            <NotificationSettings taskText={this.state.text} submit={this.submit} initial={null} ref={this.notificationSettings} type="Submit"/>
           </View>
         </View>
       </Modal>

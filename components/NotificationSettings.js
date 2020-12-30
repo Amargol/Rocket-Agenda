@@ -21,13 +21,57 @@ import { FontAwesome } from '@expo/vector-icons';
 class NotificationSettings extends Component {
   constructor(props) {
     super(props);
-    this.scale = new Animated.Value(0)
-    
-    this.state = {
-      switch: false,
-      notificationDay: 0,
-      time: ""
-    };
+
+    if (props.initial == null || !props.initial.notifying) {
+      this.scale = new Animated.Value(0)
+      this.state = {
+        switch: false,
+        notificationDay: 0,
+        time: ""
+      };
+    } else {
+      this.scale = new Animated.Value(100)
+      this.state = {
+        switch: props.initial.notifying,
+        notificationDay: props.initial.notificationDay,
+        time: props.initial.timeString
+      };
+    }    
+  }
+
+  /*
+  notifying: Boolean
+  timeString
+  notificationDay
+  dateTimeObj
+  */
+  getTimingData = (chronoFormattedDateString) => {
+    let timeString = this.computedNotificationTime()
+
+    if (!this.state.switch) {
+      return {
+        nofifying: false
+      }
+    }
+
+    if (timeString == "?" || this.state.time == "") {
+      return null
+    }
+
+    let notifying = true
+
+    let notificationDay = this.state.notificationDay
+
+    let dateTimeObj = chrono.parseDate(chronoFormattedDateString + " " + timeString)
+
+    dateTimeObj.setDate(dateTimeObj.getDate() + notificationDay)
+
+    return {
+      notifying,
+      timeString,
+      notificationDay,
+      dateTimeObj
+    }
   }
 
   formatTime = (date) => {
@@ -69,12 +113,17 @@ class NotificationSettings extends Component {
     // Foxus time text
 
     // Start
-    await Notifications.requestPermissionsAsync({
+    let status = await Notifications.requestPermissionsAsync({
       ios: {
         allowAlert: true,
         allowSound: true,
       },
     });
+
+    if (!status.granted && status.status == 0) {
+      alert("Rocket Agenda needs permission to send you notifications. Please go to \nSettings -> Rocket Agenda -> Notifications\nto enable notifications")
+      return
+    }
   
     await Notifications.setNotificationHandler({
       handleNotification: async () => ({
@@ -84,18 +133,6 @@ class NotificationSettings extends Component {
       }),
     });
 
-    const identifier = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Remember to drink water!',
-        autoDismiss: false,
-      },
-      trigger: {
-        seconds: 5
-      }
-    });
-
-    await Notifications.cancelScheduledNotificationAsync(identifier);
-    // End
 
     let st = this.state.switch
 
@@ -138,8 +175,13 @@ class NotificationSettings extends Component {
         toValue: 100,
         duration: 200,
         useNativeDriver: false
-      }).start()
+      }).start(() => {
+        if (this.timeInput) {
+          this.timeInput.focus()
+        }
+      })
     })
+
 
   }
 
@@ -188,6 +230,7 @@ class NotificationSettings extends Component {
           <View>
             <View style={styles.inputContainer}>
               <TextInput
+                ref={(input) => this.timeInput = input}
                 placeholder="8:05 AM"
                 autoCapitalize="sentences"
                 // autoFocus={true}
@@ -196,6 +239,7 @@ class NotificationSettings extends Component {
                 onChangeText={time => this.setState({ time })}
                 value={this.state.time}
                 onSubmitEditing={this.props.submit}
+                returnKeyType="go"
               />
               <View style={styles.calculatedTime}>
                 <Text style={styles.calculatedTimeText}>{this.computedNotificationTime()}</Text>
@@ -220,6 +264,17 @@ class NotificationSettings extends Component {
             </View>
           </View>
         </Animated.View>
+        {
+          this.props.type !== "Update" ?
+            (
+            <View style={styles.submitButton}>
+              <TouchableOpacity activeOpacity={0.5} onPress={this.props.submit}>
+                <Text style={styles.submitText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+            ) : 
+            null
+        }
       </View>
     );
   }
@@ -288,6 +343,21 @@ const styles = StyleSheet.create({
   notificationDayText: {
     textAlign: "center",
     color: "#505050"
+  },
+  submitButton: {
+    backgroundColor: "#333248",
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    borderRadius: 7,
+    overflow: "hidden",
+    marginTop: 7
+  },
+  submitText: {
+    fontFamily: "System",
+    fontWeight: "700",
+    fontSize: 20,
+    color: "white",
+    textAlign: "center",
   }
 });
 

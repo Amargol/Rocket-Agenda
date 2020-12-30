@@ -1,6 +1,8 @@
 import { observable, computed, action } from "mobx";
 import { AsyncStorage } from "react-native";
 
+import * as Notifications from 'expo-notifications';
+
 export default class Store {
   constructor() {
     this.initFromStore();
@@ -23,8 +25,6 @@ export default class Store {
   // Get dates and content from asyncStorage
   @action
   initFromStore() {
-
-    setTimeout(() => {
     AsyncStorage.getItem("dates").then(dates => {
       if (dates !== null) {
         this.dates = JSON.parse(dates)
@@ -48,7 +48,6 @@ export default class Store {
       }
       this.loadedContent = true
     });
-    }, 5000)
   }
 
   // Save dates and content to asyncStorage
@@ -60,7 +59,7 @@ export default class Store {
 
   // Adds a task
   @action
-  addTaskToNewDate(task, date, notes) {
+  addTaskToNewDate(task, date, notes, notificationSettings) {
     function isDateBigger(date1, date2) {
       date1 = date1.split("-");
       date2 = date2.split("-");
@@ -90,28 +89,56 @@ export default class Store {
       observable({
         task: task,
         id: Math.floor(Math.random() * 1000000000).toString(),
-        notes: notes
+        notes: notes,
+        notificationSettings
       })
     ]);
   }
 
   // Adds a task to an existing date
   @action
-  addTaskToExistingDate(task, date, notes) {
+  addTaskToExistingDate(task, date, notes, notificationSettings) {
     this.content[date].push({
       task: task,
       id: Math.floor(Math.random() * 1000000000).toString(),
-      notes: notes
+      notes: notes,
+      notificationSettings
     });
   }
 
   // Determines whether to use addTaskToNewDate or addTaskToExistingDate then calls saveToStore
   @action
-  addTask(task, date, notes) {
+  async addTask(task, date, notes, notificationSettings) {
+    if (notificationSettings.notifying && (new Date()) < (new Date(notificationSettings.dateTimeObj))) {
+
+      let notificationDayString = "Today"
+
+      if (notificationSettings.notificationDay == -1) {
+        notificationDayString = "Tomorrow"
+      } else if (notificationSettings.notificationDay == 1) {
+        notificationDayString = "Yesterday"
+      } else if (notificationSettings.notificationDay < -1) {
+        notificationDayString = "In " + (-notificationSettings.notificationDay) + " days"
+      } else if (notificationSettings.notificationDay > 1) {
+        notificationDayString = (notificationSettings.notificationDay) + " days ago"
+      }
+
+
+      notificationSettings.identifier = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: task,
+          message: notificationDayString,
+          body: notificationDayString,
+          autoDismiss: false,
+        },
+        trigger: new Date(notificationSettings.dateTimeObj)
+      });
+    }
+
     if (this.content[date] === undefined) {
-      this.addTaskToNewDate(task, date, notes);
+      this.addTaskToNewDate(task, date, notes, notificationSettings);
     } else {
-      this.addTaskToExistingDate(task, date, notes);
+      this.addTaskToExistingDate(task, date, notes, notificationSettings);
     }
     this.saveToStore();
   }
@@ -119,6 +146,10 @@ export default class Store {
   // Removes a task
   @action
   removeTask(task, date) {
+    if (task.notificationSettings.notifying) {
+      Notifications.cancelScheduledNotificationAsync(task.notificationSettings.identifier);
+    }
+
     if (this.content[date].length === 1) {
       this.dates.splice(this.dates.indexOf(date), 1);
       this.content[date] = undefined;
@@ -133,14 +164,14 @@ export default class Store {
       );
     }
 
-    this.addToRecentlyDeletedQueue(task.task, date, task.notes, task.id)
+    this.addToRecentlyDeletedQueue(task.task, date, task.notes, task.id, task.notificationSettings)
 
     this.saveToStore();
   }
 
   @action
-  addToRecentlyDeletedQueue(task, date, notes, id) {
-    this.recentlyDeleted.push({task: task, date: date, notes: notes, id: id, backgroundNumber: this.backgroundNumber})
+  addToRecentlyDeletedQueue(task, date, notes, id, notificationSettings) {
+    this.recentlyDeleted.push({task: task, date: date, notes: notes, id: id, notificationSettings, backgroundNumber: this.backgroundNumber})
 
     this.backgroundNumber = (this.backgroundNumber + 1) % 9
 

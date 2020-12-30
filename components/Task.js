@@ -78,7 +78,8 @@ class Task extends Component {
               this.props.info.task,
               this.props.color,
               this.props.info.notes,
-              this.props.info.id
+              this.props.info.id,
+              this.props.info.notificationSettings
             );
           }}
         >

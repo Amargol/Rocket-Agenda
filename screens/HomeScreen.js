@@ -145,7 +145,7 @@ export default class HomeScreen extends React.Component {
   }
 
   undoTaskDelete = (task) => {
-    this.props.store.addTask(task.task, task.date, task.notes);
+    this.props.store.addTask(task.task, task.date, task.notes, task.notificationSettings);
   }
 
   renderNotifications () {
