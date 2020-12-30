@@ -13,7 +13,8 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Keyboard
 } from "react-native";
 import { observer, inject } from "mobx-react";
 import { toJS } from "mobx";
@@ -258,6 +259,10 @@ class Agenda extends Component {
             position: "relative"
           }}
         >
+          <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={{flex: 1}}
+          >
           <View style={styles.modalContainer}>
             <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
               <Text style={styles.closeButton}>Close and Save</Text>
@@ -281,7 +286,7 @@ class Agenda extends Component {
                   </Text>
                 </View>
                 <View>
-                  <NotificationSettings taskText={this.state.modalContent.task} initial={this.state.modalContent.notificationSettings} submit={this.updateTime} ref={this.notificationSettings} type="Update"/>
+                  <NotificationSettings taskText={this.state.modalContent.task} initial={this.state.modalContent.notificationSettings} submit={() => {Keyboard.dismiss()}} ref={this.notificationSettings} type="Update"/>
                 </View>
                 <View style={styles.textInputContainer}>
                   <TextInput
@@ -298,6 +303,7 @@ class Agenda extends Component {
               </View>
             </ScrollView>
           </View>
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </Modal>
     )
