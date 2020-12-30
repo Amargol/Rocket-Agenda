@@ -106,7 +106,8 @@ class Agenda extends Component {
           message: notificationDayString,
           body: notificationDayString,
           autoDismiss: false,
-          vibrate: true
+          vibrate: true,
+          sound: true
         },
         trigger: new Date(notificationSettings.dateTimeObj)
       });
