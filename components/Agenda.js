@@ -106,6 +106,7 @@ class Agenda extends Component {
           message: notificationDayString,
           body: notificationDayString,
           autoDismiss: false,
+          vibrate: true
         },
         trigger: new Date(notificationSettings.dateTimeObj)
       });
@@ -251,18 +252,19 @@ class Agenda extends Component {
         visible={this.state.modalVisible}
         onRequestClose={this.closeModal}
       >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{flex: 1}}
+        >
         {Platform.OS === "ios" ? <StatusBar barStyle="dark-content" /> : null}
+        <SafeAreaView style={{flex: 0, backgroundColor: "#F5F5F5"}}/>
         <SafeAreaView
           style={{
             flex: 1,
-            backgroundColor: "#F5F5F5",
+            backgroundColor: "white",
             position: "relative"
           }}
         >
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{flex: 1}}
-          >
             <View style={styles.modalContainer}>
               <TouchableOpacity activeOpacity={0.4} onPress={this.closeModal}>
                 <Text style={styles.closeButton}>Close and Save</Text>
@@ -303,8 +305,8 @@ class Agenda extends Component {
                 </View>
               </ScrollView>
             </View>
-          </KeyboardAvoidingView>
         </SafeAreaView>
+          </KeyboardAvoidingView>
       </Modal>
     )
   }
