@@ -10,7 +10,7 @@
       "ios",
       "android"
     ],
-    "version": "5.0.3",
+    "version": "5.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon_without_alpha_cropped.png",
     "splash": {
@@ -30,7 +30,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.amargol.rocketagenda",
-      "buildNumber": "5.0.3"
+      "buildNumber": "5.0.4"
     },
     "android": {
       "package": "com.amargol.rocketagenda",

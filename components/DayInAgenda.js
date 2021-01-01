@@ -42,7 +42,7 @@ class DayInAgenda extends Component {
   isSpecialDate(date) {
     let todayDate = new Date();
     let today =
-      todayDate.getUTCFullYear() +
+      todayDate.getFullYear() +
       "-" +
       ("0" + (todayDate.getMonth() + 1)).slice(-2) +
       "-" +
@@ -51,7 +51,7 @@ class DayInAgenda extends Component {
     todayDate.setDate(todayDate.getDate() + 1);
 
     let tomorrow =
-      todayDate.getUTCFullYear() +
+      todayDate.getFullYear() +
       "-" +
       ("0" + (todayDate.getMonth() + 1)).slice(-2) +
       "-" +
@@ -60,7 +60,7 @@ class DayInAgenda extends Component {
     todayDate.setDate(todayDate.getDate() - 2);
 
     let yesterday =
-      todayDate.getUTCFullYear() +
+      todayDate.getFullYear() +
       "-" +
       ("0" + (todayDate.getMonth() + 1)).slice(-2) +
       "-" +

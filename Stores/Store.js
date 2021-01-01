@@ -35,7 +35,7 @@ export default class Store {
     AsyncStorage.getItem("content").then(content => {
       function stringDate(date) {
         let today =
-          date.getUTCFullYear() +
+          date.getFullYear() +
           "-" +
           ("0" + (date.getMonth() + 1)).slice(-2) +
           "-" +
@@ -197,7 +197,7 @@ export default class Store {
     }, {});
     let date = new Date();
     let today =
-      date.getUTCFullYear() +
+      date.getFullYear() +
       "-" +
       ("0" + (date.getMonth() + 1)).slice(-2) +
       "-" +
