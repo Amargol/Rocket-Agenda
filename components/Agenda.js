@@ -14,7 +14,8 @@ import {
   StatusBar,
   Platform,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
+  RefreshControl
 } from "react-native";
 import { observer, inject } from "mobx-react";
 import { toJS } from "mobx";
@@ -70,7 +71,7 @@ class Agenda extends Component {
     let notificationSettings = this.notificationSettings.current.getTimingData(this.getFormattedDateForChrono(this.state.modalContent.date))
 
     if (notificationSettings === null) {
-      alert('Please enter a valid notification time')
+      alert('Please enter a valid notification time or turn off the notification switch')
       return
     }
 
@@ -271,6 +272,7 @@ class Agenda extends Component {
                 <Text style={styles.closeButton}>Close and Save</Text>
               </TouchableOpacity>
               <ScrollView style={{marginBottom: 15}}>
+                <RefreshControl refreshing={false} tintColor="#7ad7f0" colors={["#7ad7f0"]} title="Close and Save" onRefresh={this.closeModal}/>
                 <View style={styles.modalContentContainer}>
                   <View
                     style={[

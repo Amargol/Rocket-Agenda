@@ -77,7 +77,7 @@ class CreateTaskModal extends Component {
     let notificationSettings = this.notificationSettings.current.getTimingData(this.getFormattedDateForChrono(this.props.date))
 
     if (notificationSettings === null) {
-      alert('Please enter a valid notification time')
+      alert('Please enter a valid notification time or turn off the notification switch')
       return
     }
 
